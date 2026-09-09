@@ -1,0 +1,1 @@
+ALTER TABLE "album_photos" ADD COLUMN "sort_at" timestamp with time zone DEFAULT now() NOT NULL;

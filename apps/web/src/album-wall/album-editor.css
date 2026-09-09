@@ -1,0 +1,73 @@
+.album-composer {
+  position: fixed; inset: 0; margin: auto; width: min(900px, calc(100vw - 48px));
+  max-width: none; max-height: calc(100dvh - 48px); padding: 0;
+  border: 1px solid #e1d5c4; border-radius: 14px; color: #54473b; background: #fffbf4;
+  box-shadow: 0 30px 100px #3d302733; overflow: auto;
+}
+.album-composer::backdrop { background: #3d362d57; backdrop-filter: blur(4px); }
+.album-composer[open] { animation: composer-arrive 200ms ease-out; }
+.album-composer__layout { display: grid; grid-template-columns: 330px minmax(0, 1fr); }
+.album-composer__preview {
+  display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 28px;
+  background: linear-gradient(#eee9d6aa, #e8dec999), url('/themes/secret-garden/scene.webp') 30% center / cover;
+  border-right: 1px solid #ddceb9; text-align: center; min-width: 0;
+}
+.album-composer__edition { font: 9px/1.6 Georgia, serif; letter-spacing: .21em; color: #7e8066; }
+.album-composer__book {
+  position: relative; width: 222px; min-height: 285px; padding: 22px 18px 26px 24px; margin: 28px 0 24px;
+  border: 1px solid #cab695; border-left: 9px solid #b5b496; border-radius: 3px 9px 9px 3px;
+  background: repeating-linear-gradient(90deg, #62543005 0 1px, transparent 1px 3px), #f8eedc;
+  box-shadow: 3px 3px 0 #fffbf2, 5px 5px 0 #cabc9e, 10px 20px 30px #4c48282b;
+  transform: rotate(-4deg);
+}
+.album-composer__ribbon { position: absolute; top: -1px; right: 22px; width: 17px; height: 43px; background: #974b41; clip-path: polygon(0 0,100% 0,100% 100%,50% 84%,0 100%); }
+.album-composer__cover-art { margin: 7px 0 20px; height: 140px; display: grid; place-items: center; border: 5px solid #fffaf1; background: linear-gradient(#f7eed977,#f7eed955), url('/themes/secret-garden/scene.webp') center / cover; }
+.album-composer__cover-art img { width: 100%; height: 130px; object-fit: cover; }
+.album-composer__cover-art span { font: 18px/1.8 'Songti SC', serif; letter-spacing: .12em; color: #687154; }
+.album-composer__book > strong { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; font: 18px/1.6 'Songti SC', serif; }
+.album-composer__book time { display: block; margin-top: 10px; font: 10px/1.6 Georgia, serif; letter-spacing: .1em; color: #9a8170; }
+.album-composer__preview > p { margin: 10px 0 14px; font: 15px/1.9 'Songti SC', serif; color: #73785e; }
+.album-composer__preview > small { color: #8c8a74; font-size: 10px; }
+.album-composer .album-editor__paper { width: 100%; padding: 36px 38px 0; gap: 18px; border: 0; box-shadow: none; background: #fffbf4; min-width: 0; }
+.album-composer .album-editor__paper header { padding-right: 28px; margin-bottom: 8px; }
+.album-composer .album-editor__paper header p { color: #a78367; font-size: 11px; line-height: 1.6; letter-spacing: .08em; margin-bottom: 8px; }
+.album-composer .album-editor__paper header h2 { font: 32px/1.35 'Songti SC', serif; color: #534c3e; }
+.album-composer .album-editor__paper label { gap: 8px; min-width: 0; }
+.album-composer .album-editor__paper label > span { font-size: 12px; font-weight: 500; color: #6f6457; }
+.album-composer__optional { margin-left: 6px; font-size: 10px; font-weight: 400; color: #a89d8e; }
+.album-composer__date { display: grid; gap: 8px; min-width: 0; }
+.album-composer__date > span { font-size: 12px; color: #6f6457; }
+.album-composer__date > em { font-size: 12px; color: #9a3a31; font-style: normal; }
+.album-composer .album-editor__paper input, .album-composer .album-editor__paper textarea {
+  width: 100%; min-width: 0; box-sizing: border-box; min-height: 46px; padding: 12px 14px;
+  border: 1px solid #e3d8c9; border-radius: 6px; background: #faf6ee; color: #554a3e; font-size: 14px;
+}
+.album-composer .album-editor__paper textarea { min-height: 100px; resize: vertical; line-height: 1.7; }
+.album-composer input::placeholder, .album-composer textarea::placeholder { color: #aa9d8b; font-weight: 400; }
+.album-composer input:focus, .album-composer textarea:focus { outline: 2px solid #a46a5b66; outline-offset: 2px; border-color: #ac7e6b; background: #fffdf8; }
+.album-composer .album-editor__paper label small { color: #aaa090; font-size: 10px; }
+.album-composer .album-editor__paper footer { position: sticky; bottom: 0; z-index: 2; margin-top: 2px; padding: 18px 0 24px; border-top: 1px solid #eee5d8; background: #fffbf4; display: flex; gap: 10px; align-items: center; }
+.album-composer footer > span { margin-right: auto; font-size: 10px; color: #a19685; }
+.album-composer .album-editor__paper footer button { border-radius: 5px; padding: 11px 19px; min-height: 44px; font-size: 13px; white-space: nowrap; }
+.album-composer .album-editor__paper footer button[type='submit'] { background: #89463e; border-color: #89463e; color: #fff9ef; box-shadow: 0 4px 9px #89463e17; }
+.app-shell .album-composer__close { position: absolute; top: 13px; right: 13px; width: 44px; height: 44px; min-height: 44px; padding: 0; border: 0; background: transparent; font: 25px/1 system-ui; color: #978675; }
+.album-composer__discard { padding: 16px; border: 1px solid #d6b39a; border-radius: 6px; background: #fbefdf; }
+.album-composer__discard strong { font-size: 14px; }
+.album-composer__discard p { font-size: 12px; }
+.album-composer__discard > div { display: flex; gap: 10px; flex-wrap: wrap; }
+.album-composer__discard button { font-size: 12px; }
+@keyframes composer-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (max-width: 700px) {
+  .album-composer { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); border-radius: 10px; }
+  .album-composer__layout { display: block; }
+  .album-composer__preview { padding: 18px 56px 18px 22px; border-right: 0; border-bottom: 1px solid #dfd4bf; align-items: stretch; }
+  .album-composer__edition, .album-composer__cover-art, .album-composer__preview > p, .album-composer__preview > small { display: none; }
+  .album-composer__book { width: 100%; min-height: 0; margin: 0; padding: 10px 30px 10px 14px; transform: rotate(-1deg); }
+  .album-composer__book > strong { font-size: 15px; -webkit-line-clamp: 1; }
+  .album-composer__book time { margin-top: 3px; font-size: 9px; }
+  .album-composer .album-editor__paper { padding: 30px 22px 0; gap: 16px; }
+  .album-composer .album-editor__paper header h2 { font-size: 28px; }
+  .album-composer footer > span { display: none; }
+  .album-composer .album-editor__paper footer { justify-content: flex-end; }
+}
+@media (prefers-reduced-motion: reduce) { .album-composer[open] { animation: none; } }

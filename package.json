@@ -1,0 +1,21 @@
+{
+  "name": "memory",
+  "private": true,
+  "packageManager": "pnpm@11.8.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "test:e2e": "playwright test",
+    "verify": "pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e && pnpm --filter @memory/worker test:restart"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
+  }
+}

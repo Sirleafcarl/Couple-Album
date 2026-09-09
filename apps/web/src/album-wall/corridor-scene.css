@@ -1,0 +1,105 @@
+/* One continuous backdrop; controls float within the scene, not above it. */
+.story-content > .album-wall {
+  background: linear-gradient(#fcf6eadd, #fcf6ea55 38%, #fcf6ea00 65%), url('/themes/secret-garden/scene.webp') center / cover;
+  background-attachment: fixed;
+}
+.story-content > .album-wall--love-letters { background-image: linear-gradient(#fcf6eadd, #fcf6ea44 55%, transparent), url('/themes/love-letters/scene.webp'); }
+.story-content > .album-wall--date-adventure { background-image: linear-gradient(#fcf6eadd, #fcf6ea44 55%, transparent), url('/themes/date-adventure/scene.webp'); }
+.app-shell .album-wall__masthead { grid-template-columns: minmax(160px, 1fr) auto auto; min-height: 100px; padding: 24px 36px 12px; background: transparent; border: 0; box-shadow: none; backdrop-filter: none; gap: 20px; }
+.app-shell .album-wall__identity strong { font-size: 24px; font-weight: 400; }
+.app-shell .album-wall__identity > span { display: none; }
+.app-shell .album-wall__actions { display: grid; justify-items: end; gap: 6px; }
+.story-music-note { color: #968471; font-size: 10px; }
+.story-anniversary-note { max-width: 280px; color: #8a7865; text-align: right; }
+.story-anniversary-note p { margin: 0 0 5px; font: 12px/1.6 'Songti SC', serif; }
+.story-anniversary-note small { display: block; font-size: 9px; overflow-wrap: anywhere; }
+.app-shell .album-year-picker { justify-content: flex-start; padding: 4px 36px; min-height: 54px; background: transparent; border: 0; }
+.app-shell .album-wall-theme-picker { padding: 4px 36px; min-height: 48px; border: 0; background: transparent; }
+.app-shell .album-wall-theme-picker button { font-size: 12px; padding: 8px 12px; min-height: 44px; }
+.app-shell .album-corridor { min-height: 0; }
+.app-shell .album-corridor__heading { justify-content: space-between; min-width: 0; padding: 12px 36px 0; min-height: 70px; align-items: center; }
+.app-shell .album-corridor__heading > div { text-align: left; }
+.app-shell .album-corridor__heading h1 { font-size: clamp(28px, 3vw, 42px); }
+.app-shell .album-corridor__heading p { font: 10px/1.6 'Songti SC', serif; color: #8d806b; }
+.app-shell .album-corridor__heading-actions { flex-wrap: wrap; justify-content: flex-end; }
+.app-shell .album-corridor__heading button { min-height: 44px; border-radius: 3px; white-space: nowrap; padding: 8px 16px; }
+.app-shell .album-corridor__months { width: auto; justify-content: flex-start; margin: 0 36px; overflow-x: auto; gap: 4px; padding: 8px 0; }
+.app-shell .album-corridor__months::before { display: none; }
+.app-shell .album-corridor__months button { flex: 0 0 auto; min-height: 44px; padding: 8px 10px; white-space: nowrap; border: 0; background: #fff9ee66; font-size: 11px; }
+.app-shell .album-corridor__viewport { margin-top: 0; scrollbar-width: none; }
+.app-shell .album-corridor__viewport::-webkit-scrollbar { display: none; }
+.app-shell .album-corridor__scene { background: none; margin-top: 0; }
+.app-shell .album-corridor__scene::after { background: none; }
+.app-shell .red-thread__line { stroke-width: 3; }
+.app-shell .red-thread__shadow { stroke-width: 5; opacity: .5; }
+.app-shell .album-cover--above > button { transform-origin: center bottom; }
+.app-shell .album-cover--below > button { transform-origin: center top; }
+.app-shell .album-cover > button:hover, .app-shell .album-cover > button:focus-visible { transform: rotate(0); }
+.app-shell .album-cover > button { border-radius: 2px 5px 5px 2px; border-left: 5px solid #d5bba1; box-shadow: 2px 3px 0 #f7eddd, 4px 5px 0 #d7c4ac, 0 16px 28px #49301e2b; }
+.app-shell .album-cover__photo { background: #ece2d0; }
+@media (width < 1000px) {
+  .app-shell .album-wall__masthead { grid-template-columns: 1fr auto; padding: 20px 24px 8px; gap: 12px; }
+  .app-shell .album-wall__identity { display: none; }
+  .story-anniversary-note { text-align: left; }
+  .app-shell .album-year-picker, .app-shell .album-wall-theme-picker { padding-inline: 24px; }
+  .app-shell .album-corridor__heading { padding-inline: 24px; }
+  .app-shell .album-corridor__months { margin-inline: 24px; }
+}
+@media (width < 768px) {
+  .app-shell .album-wall__masthead { padding-top: 4px; }
+  .story-anniversary-note small { max-width: 190px; }
+  .app-shell .album-wall__account { font-size: 11px; padding: 8px 10px; }
+  .app-shell .album-corridor__heading { gap: 12px; }
+  .app-shell .album-corridor__heading h1 { font-size: 28px; }
+  .app-shell .album-corridor__heading-actions { max-width: 150px; }
+}
+/* Compact controls leave the first screen to the albums. */
+.app-shell .album-wall__masthead { min-height: 64px; padding: 10px 28px 4px; gap: 12px; }
+.app-shell .album-wall__identity strong { font-size: 20px; }
+.app-shell .album-wall__identity .eyebrow { display: none; }
+.story-anniversary-note small, .story-music-note { display: none; }
+.album-wall__toolbar { display: flex; align-items: center; gap: 12px; padding: 0 28px; }
+.app-shell .album-year-picker { flex: 1; min-width: 0; min-height: 44px; padding: 0; overflow-x: auto; flex-wrap: nowrap; }
+.app-shell .album-year-picker button { flex-shrink: 0; display: flex; align-items: baseline; gap: 8px; padding: 5px 12px; min-height: 40px; }
+.app-shell .album-year-picker button strong { font-size: 18px; }
+.album-wall-theme-control { position: relative; z-index: 12; flex-shrink: 0; }
+.app-shell .album-wall-theme-control > button { min-height: 40px; padding: 6px 16px; font-size: 12px; border-radius: 8px; background: #fffbf1cc; }
+.app-shell .album-wall-theme-picker { position: absolute; right: 0; top: calc(100% + 8px); display: grid; gap: 4px; width: 180px; padding: 8px; border: 1px solid #dfd0be; border-radius: 12px; background: #fffcf5; box-shadow: 0 12px 32px #51372124; }
+.app-shell .album-wall-theme-picker button { text-align: left; border: 0; border-radius: 6px; }
+.app-shell .album-wall-theme-picker button[aria-pressed='true']::after { content: '✓'; margin-left: auto; }
+.app-shell .album-corridor__heading { min-height: 44px; padding: 2px 28px; }
+.app-shell .album-corridor__heading h1 { font-size: 22px; margin: 0; }
+.app-shell .album-corridor__heading p { display: none; }
+.app-shell .album-corridor__heading button { font-size: 12px; padding: 6px 12px; }
+.app-shell .album-corridor__months { margin: 0 28px; padding: 0; }
+.album-corridor__stage { position: relative; }
+.app-shell .album-cover { transform: translateX(-50%) scale(var(--cover-scale, 1)); transform-origin: center top; }
+.app-shell .album-cover > button { animation: album-breeze 8s ease-in-out infinite; }
+.app-shell .album-cover:nth-of-type(3n + 1) > button { animation-delay: -3s; animation-duration: 9s; }
+.app-shell .album-cover:nth-of-type(3n + 2) > button { animation-delay: -6s; animation-duration: 11s; }
+.app-shell .album-cover > button:hover, .app-shell .album-cover > button:focus-visible { animation-play-state: paused; }
+.corridor-breeze { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 5; }
+.corridor-breeze__leaf { position: absolute; width: 26px; color: #87906b; opacity: 0; left: -50px; top: 20%; animation: leaf-passage 24s linear infinite; }
+.corridor-breeze__leaf--1 { top: 55%; width: 18px; color: #b1a373; animation-delay: -7s; animation-duration: 29s; }
+.corridor-breeze__leaf--2 { top: 34%; width: 32px; animation-delay: -16s; animation-duration: 32s; }
+.corridor-breeze__leaf--3 { top: 70%; width: 15px; animation-delay: -11s; animation-duration: 35s; }
+.corridor-breeze__leaf--4 { top: 8%; width: 20px; color: #a3a180; animation-delay: -21s; animation-duration: 38s; }
+.corridor-breeze__wind { position: absolute; width: 55%; top: 35%; color: #fffdf2; opacity: 0; animation: wind-passage 18s ease-in-out infinite; }
+@keyframes album-breeze { 0%, 100% { transform: rotate(-1.2deg); } 50% { transform: rotate(1.2deg); } }
+@keyframes leaf-passage { 0%, 70%, 100% { opacity: 0; transform: translate(0, 0) rotate(-25deg); } 8% { opacity: .5; } 32% { transform: translate(52vw, 38px) rotate(110deg); opacity: .45; } 62% { opacity: 0; transform: translate(105vw, 80px) rotate(245deg); } }
+@keyframes wind-passage { 0%, 65%, 100% { opacity: 0; transform: translateX(-50%); } 25% { opacity: .22; } 60% { opacity: 0; transform: translateX(120%); } }
+@media (width < 768px) {
+  .app-shell .album-wall__masthead { padding: 4px 16px; min-height: 48px; }
+  .album-wall__toolbar { padding-inline: 16px; }
+  .app-shell .album-corridor__heading { padding-inline: 16px; }
+  .app-shell .album-corridor__heading h1 { font-size: 19px; }
+  .app-shell .album-corridor__heading-actions { max-width: none; flex-wrap: nowrap; gap: 4px; }
+  .app-shell .album-corridor__heading button { padding-inline: 8px; font-size: 11px; }
+  .app-shell .album-corridor__months { margin-inline: 16px; }
+  .corridor-breeze__leaf--3, .corridor-breeze__leaf--4 { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-shell .album-cover > button { animation: none; }
+  .corridor-breeze { display: none; }
+  .app-shell .album-cover > button, .story-content > .album-wall { transition: none; }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@memory/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file=../../.env --import tsx --watch src/server.ts",
+    "dev:e2e": "tsx src/server.ts",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "pnpm clean && tsc -p tsconfig.build.json",
+    "start": "node dist/server.js",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "user:create": "node --env-file=../../.env --import tsx src/users/create-user.ts"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.1.2",
+    "@fastify/multipart": "10.1.1",
+    "@inquirer/prompts": "^8.7.0",
+    "@memory/contracts": "workspace:*",
+    "@memory/db": "workspace:*",
+    "@memory/media": "workspace:*",
+    "argon2": "^0.45.1",
+    "fastify": "^5.12.1",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  }
+}

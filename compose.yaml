@@ -1,0 +1,148 @@
+services:
+  postgres:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_DB: memory
+      POSTGRES_USER: memory
+      POSTGRES_PASSWORD: memory
+    ports:
+      - "127.0.0.1:38427:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U memory -d memory"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - memory-postgres:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+
+  migrate:
+    image: node:24-bookworm-slim
+    working_dir: /workspace
+    command:
+      - sh
+      - -c
+      - corepack pnpm install --frozen-lockfile --filter @memory/db... && corepack pnpm --filter @memory/db db:migrate
+    environment:
+      DATABASE_URL: postgres://memory:memory@postgres:5432/memory
+    volumes:
+      - ./:/workspace
+      - migrate-node-modules:/workspace/node_modules
+      - migrate-db-node-modules:/workspace/packages/db/node_modules
+      - migrate-contracts-node-modules:/workspace/packages/contracts/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  worker:
+    image: node:24-bookworm-slim
+    working_dir: /runtime
+    command:
+      - sh
+      - -c
+      - tar --exclude=.git --exclude=.worktrees --exclude=node_modules --exclude=data -C /source -cf - . | tar -C /runtime -xf - && corepack pnpm install --frozen-lockfile --filter @memory/worker... && exec corepack pnpm --filter @memory/worker exec tsx src/main.ts
+    environment:
+      DATABASE_URL: postgres://memory:memory@postgres:5432/memory
+      DATA_ROOT: /data
+      IMAGE_WORKER_CONCURRENCY: ${IMAGE_WORKER_CONCURRENCY:-1}
+      IMAGE_WORKER_POLL_MS: ${IMAGE_WORKER_POLL_MS:-1000}
+      STALE_JOB_MS: ${STALE_JOB_MS:-900000}
+    volumes:
+      - ./:/source:ro
+      - ${DATA_ROOT:-./data}:/data
+      - worker-node-modules:/runtime/node_modules
+      - worker-app-node-modules:/runtime/apps/worker/node_modules
+      - worker-contracts-node-modules:/runtime/packages/contracts/node_modules
+      - worker-db-node-modules:/runtime/packages/db/node_modules
+      - worker-media-node-modules:/runtime/packages/media/node_modules
+    tmpfs:
+      - /runtime
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  api:
+    image: node:24-bookworm-slim
+    working_dir: /runtime
+    command:
+      - sh
+      - -c
+      - tar --exclude=.git --exclude=.worktrees --exclude=node_modules --exclude=data -C /source -cf - . | tar -C /runtime -xf - && corepack pnpm install --frozen-lockfile --filter @memory/api... && exec corepack pnpm --filter @memory/api exec tsx src/server.ts
+    environment:
+      DATABASE_URL: postgres://memory:memory@postgres:5432/memory
+      DATA_ROOT: /data
+      API_HOST: 0.0.0.0
+      API_PORT: 23001
+      APP_ORIGIN: ${APP_ORIGIN:-http://localhost:5173}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+      MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-104857600}
+      MIN_FREE_BYTES: ${MIN_FREE_BYTES:-1073741824}
+      IMAGE_WORKER_CONCURRENCY: ${IMAGE_WORKER_CONCURRENCY:-1}
+      IMAGE_WORKER_POLL_MS: ${IMAGE_WORKER_POLL_MS:-1000}
+      STALE_JOB_MS: ${STALE_JOB_MS:-900000}
+      STAGING_TTL_MS: ${STAGING_TTL_MS:-86400000}
+    ports:
+      - "127.0.0.1:23001:23001"
+    volumes:
+      - ./:/source:ro
+      - ${DATA_ROOT:-./data}:/data
+      - api-node-modules:/runtime/node_modules
+      - api-app-node-modules:/runtime/apps/api/node_modules
+      - api-contracts-node-modules:/runtime/packages/contracts/node_modules
+      - api-db-node-modules:/runtime/packages/db/node_modules
+      - api-media-node-modules:/runtime/packages/media/node_modules
+    tmpfs:
+      - /runtime
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:23001/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  web:
+    image: node:24-bookworm-slim
+    working_dir: /runtime
+    command:
+      - sh
+      - -c
+      - tar --exclude=.git --exclude=.worktrees --exclude=node_modules --exclude=data -C /source -cf - . | tar -C /runtime -xf - && corepack pnpm install --frozen-lockfile --filter @memory/web... && exec corepack pnpm --filter @memory/web exec vite --host 0.0.0.0
+    environment:
+      API_PROXY_TARGET: http://api:23001
+    ports:
+      - "127.0.0.1:5173:5173"
+    volumes:
+      - ./:/source:ro
+      - web-node-modules:/runtime/node_modules
+      - web-app-node-modules:/runtime/apps/web/node_modules
+      - web-contracts-node-modules:/runtime/packages/contracts/node_modules
+    tmpfs:
+      - /runtime
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  memory-postgres:
+  migrate-node-modules:
+  migrate-db-node-modules:
+  migrate-contracts-node-modules:
+  worker-node-modules:
+  worker-app-node-modules:
+  worker-contracts-node-modules:
+  worker-db-node-modules:
+  worker-media-node-modules:
+  api-node-modules:
+  api-app-node-modules:
+  api-contracts-node-modules:
+  api-db-node-modules:
+  api-media-node-modules:
+  web-node-modules:
+  web-app-node-modules:
+  web-contracts-node-modules:

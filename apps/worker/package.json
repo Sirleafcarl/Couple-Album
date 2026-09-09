@@ -1,0 +1,27 @@
+{
+  "name": "@memory/worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file=../../.env --import tsx --watch src/main.ts",
+    "dev:e2e": "tsx src/main.ts",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "pnpm clean && tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "test": "vitest run",
+    "test:restart": "RUN_RESTART_TESTS=true vitest run test/restart-recovery.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@memory/db": "workspace:*",
+    "@memory/media": "workspace:*",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "drizzle-orm": "^0.45.2",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  }
+}

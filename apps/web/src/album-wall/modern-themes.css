@@ -1,0 +1,101 @@
+/* New worlds share real controls, not baked-in interface screenshots. */
+.app-shell .album-wall-theme-picker { width: min(540px, calc(100vw - 40px)); max-height: min(540px, 65dvh); overflow-y: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 12px; }
+.app-shell .album-wall-theme-picker button { display: flex; align-items: center; gap: 10px; padding: 8px; min-height: 76px; background: transparent; border: 1px solid transparent; }
+.app-shell .album-wall-theme-picker button[aria-pressed='true'] { border-color: #ad7769; background: #f7eee5; }
+.app-shell .album-wall-theme-picker button[aria-pressed='true']::after { display: none; }
+.app-shell .album-wall-theme-picker .theme-choice__art { flex: 0 0 66px; width: 66px; height: 54px; border-radius: 5px; background: #f3f5f5; color: #41474a; font: 25px/54px sans-serif; text-align: center; }
+.app-shell .album-wall-theme-picker button > .theme-choice__text { display: grid; flex: 1; gap: 5px; min-width: 0; width: auto; height: auto; border-radius: 0; background: transparent; }
+.theme-choice__text strong { font-size: 12px; font-weight: 600; }
+.theme-choice__art { overflow: hidden; }
+.theme-choice__art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.theme-choice__text small { font-size: 10px; color: #827b72; line-height: 1.5; }
+.app-shell[data-theme] { color: #27333c; background: #fcfdfd; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+.app-shell[data-theme]::before, .app-shell[data-theme] .story-spine::after { display: none; }
+.app-shell[data-theme] .story-spine { background: #fafbfbeF; border-right: 1px solid #e5e8e9; box-shadow: none; color: #35424b; }
+.app-shell[data-theme] .story-brand__mark { font: 36px/1 sans-serif; border: 0; color: #34404a; }
+.app-shell[data-theme] .story-brand__name { font-family: inherit; font-size: 18px; color: #34404a; }
+.app-shell[data-theme] .story-brand__name small { font-family: inherit; }
+.app-shell[data-theme] .story-spine__chapter { display: none; }
+.app-shell[data-theme] .story-spine nav { margin-top: 42px; }
+.app-shell[data-theme] .story-spine nav a { border-radius: 8px; color: #53616b; font-size: 14px; }
+.app-shell[data-theme] .story-spine nav a.active { background: #edf0f2; color: #293944; box-shadow: none; border-color: transparent; }
+.app-shell[data-theme] .story-spine__foot { color: #88919a; }
+.app-shell[data-theme] .story-spine__foot > span { display: none; }
+.app-shell[data-theme] .story-nav-toggle, .app-shell[data-theme] .story-drawer { background: #fcfdfd; color: #35424b; }
+.story-content > .album-wall.album-wall--modern { --ink: #27333c; --muted-ink: #687680; --accent: var(--theme-accent); --thread: var(--theme-accent); --thread-dark: var(--theme-accent); background-color: #fcfdfd; background-image: var(--theme-scene); background-size: cover; background-position: center; background-attachment: fixed; font-family: inherit; }
+.app-shell .album-wall--modern .album-wall__masthead { padding-top: 14px; min-height: 72px; }
+.app-shell .album-wall--modern .album-wall__identity strong { font-family: inherit; font-size: 22px; font-weight: 600; line-height: 1.3; color: var(--ink); }
+.app-shell .album-wall--modern .album-wall__account { background: #ffffffb8; color: #5b6670; border: 1px solid #e0e4e6; font-size: 11px; border-radius: 7px; }
+.app-shell .album-wall--modern .album-year-picker button { border: 0; border-radius: 6px; background: #ffffff9c; color: #57636d; }
+.app-shell .album-wall--modern .album-year-picker button[aria-pressed='true'] { color: var(--theme-accent); background: #ffffffdf; }
+.app-shell .album-wall--modern .album-corridor__heading h1 { font: 500 20px/1.4 sans-serif; color: var(--ink); }
+.app-shell .album-wall--modern .album-corridor__heading button { border: 0; border-radius: 7px; background: var(--theme-accent); color: white; }
+.app-shell .album-wall--modern .album-corridor__months button { background: #ffffff70; color: #5d6b77; font-family: inherit; }
+.app-shell .album-wall--modern .album-corridor__months button:disabled { opacity: .38; }
+.app-shell .album-wall--modern .story-anniversary-note { color: #536473; }
+.modern-corridor { position: relative; min-width: 100%; }
+.modern-corridor .red-thread { opacity: .45; }
+.app-shell .modern-corridor .red-thread__line { stroke-width: 1; }
+.app-shell .modern-corridor .red-thread__shadow { display: none; }
+.modern-album { position: absolute; }
+.app-shell .modern-album > button { display: block; width: 100%; padding: 0; min-height: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; color: var(--ink); text-align: left; transform: rotate(var(--album-angle)); transition: filter .2s ease; }
+.app-shell .modern-album > button:hover { filter: brightness(1.04); }
+.app-shell .modern-album > button:focus-visible { outline: 3px solid var(--theme-accent); outline-offset: 6px; }
+.modern-album__image { display: block; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 7px; background: #ffffffb8; box-shadow: 0 10px 30px #23344213; }
+.modern-album__image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.modern-album__empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; height: 100%; color: #7a8690; font-size: 12px; }
+.modern-album__empty > span { font: 300 44px/1 sans-serif; opacity: .35; }
+.modern-album__caption { display: flex; flex-direction: column; gap: 7px; padding: 13px 3px; }
+.modern-album__caption time { font-size: 11px; color: #78848e; letter-spacing: .025em; }
+.modern-album__caption strong { font-size: 16px; font-weight: 500; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.modern-corridor--editorial .modern-album__image { border-radius: 0; box-shadow: none; }
+.modern-corridor--editorial .modern-album:nth-of-type(2n) .modern-album__image { aspect-ratio: 1.3; }
+.modern-corridor--editorial .modern-album:nth-of-type(3n) .modern-album__image { aspect-ratio: 1; }
+.modern-corridor--collage .modern-album:nth-of-type(2n) .modern-album__image { border-radius: 50% 50% 10px 10px; }
+.modern-corridor--collage .modern-album:nth-of-type(3n) .modern-album__image { aspect-ratio: 1; }
+.modern-corridor--pop .modern-album:nth-of-type(2n + 1) .modern-album__image { border-radius: 50%; }
+.modern-corridor--pop .modern-album__caption strong { font-weight: 750; }
+.modern-corridor--pop .modern-album__caption, .modern-corridor--collage .modern-album__caption { background: #ffffffee; border-radius: 0 0 7px 7px; padding-inline: 10px; }
+.modern-corridor--gallery .modern-album__image { border: 7px solid #ffffff85; border-radius: 3px; box-shadow: 3px 4px 0 #ffffff80, 0 18px 24px #24374518; }
+.modern-corridor--orbit .modern-album__image { border: 1px solid #fff1b6; border-radius: 10px; box-shadow: 0 0 20px #ffeca085; }
+.modern-corridor--orbit .modern-album__caption { background: #fffdf0e8; padding: 12px; border-radius: 0 0 8px 8px; }
+.modern-corridor--track .modern-album__image { border: 5px solid #ece8ffb3; box-shadow: 3px 4px 0 #c2b7e366, 0 20px 28px #50407b20; }
+.modern-corridor--track .modern-album__caption { background: #ffffffc9; padding-inline: 12px; }
+.modern-corridor--arc .modern-album > button { background: #ffffffdf; padding: 5px; border-radius: 9px; box-shadow: 0 16px 28px #446b9b14; }
+.modern-corridor--arc .modern-album__caption { text-align: center; }
+.modern-corridor--hanging .modern-album > button { transform-origin: center top; animation: album-breeze 9s ease-in-out infinite; animation-delay: var(--sway-delay); }
+.modern-corridor--hanging .modern-album > button:hover, .modern-corridor--hanging .modern-album > button:focus-visible { animation-play-state: paused; }
+.modern-album__hanger { position: absolute; top: -8px; left: 50%; height: 8px; width: 1px; background: var(--thread); }
+.app-shell[data-theme='love-playground'] .story-spine { background: #12366c; }
+.app-shell[data-theme='love-playground'] .story-brand__name, .app-shell[data-theme='love-playground'] .story-brand__mark, .app-shell[data-theme='love-playground'] .story-spine nav a { color: #fff; }
+.app-shell[data-theme='love-playground'] .story-spine nav a.active { background: #315a91; color: #fff; }
+.app-shell[data-theme='sacred-joy'] .story-spine { background: #332e24; }
+.app-shell[data-theme='sacred-joy'] .story-brand__name, .app-shell[data-theme='sacred-joy'] .story-brand__mark, .app-shell[data-theme='sacred-joy'] .story-spine nav a { color: #fff4cb; }
+.app-shell[data-theme='sacred-joy'] .story-spine nav a.active { background: #665334; color: #fff4cb; }
+.app-shell .album-wall--sacred-joy .album-wall__identity strong, .app-shell .album-wall--sacred-joy .album-corridor__heading h1 { color: #fff9e5; text-shadow: 0 1px 5px #433920; }
+.app-shell .album-wall--photo-exhibition .modern-album__caption { border-top: 1px solid #dfe2e5; margin-top: 8px; }
+.app-shell .album-wall--photo-exhibition .modern-album:nth-of-type(2n) .modern-album__image { aspect-ratio: 1.75; }
+.app-shell .album-wall--photo-exhibition .modern-album:nth-of-type(3n) .modern-album__image { aspect-ratio: .82; }
+.app-shell .album-wall--photo-exhibition .modern-album__caption strong { font-size: 18px; font-weight: 450; }
+.app-shell .album-wall--photo-exhibition .modern-corridor .red-thread { opacity: .16; }
+/* Modern modal and composer surfaces follow the selected year. */
+.album-wall--modern .album-frontispiece, .album-wall--modern .album-composer { border-color: #e2e7eb; background: #fff; color: var(--ink); box-shadow: 0 25px 90px #26374726; }
+.album-wall--modern .album-frontispiece__cover, .album-wall--modern .album-composer__preview { background-color: #f4f6f8; background-image: var(--theme-scene); background-size: cover; }
+.album-wall--modern .album-frontispiece__book { padding: 0; background: transparent; border: 0; border-radius: 8px; overflow: hidden; box-shadow: 0 12px 25px #31465a22; }
+.album-wall--modern .album-frontispiece__ribbon, .album-wall--modern .album-frontispiece__book-note { display: none; }
+.album-wall--modern .album-composer__book { transform: none; border: 0; border-radius: 10px; box-shadow: 0 12px 30px #31465a18; background: #ffffffdc; }
+.album-wall--modern .album-composer__ribbon { display: none; }
+.album-wall--modern .album-composer__cover-art { background-image: var(--theme-scene); background-color: #eef1f4; border: 0; border-radius: 6px; }
+.app-shell .album-wall--modern .album-editor__paper h2 { font-family: inherit; }
+.app-shell .album-wall--modern .album-frontispiece h2 { font-family: inherit; }
+.album-wall--modern .album-frontispiece__story, .album-wall--modern .album-frontispiece__eyebrow { font-family: inherit; }
+.app-shell .album-wall--modern .album-frontispiece__actions a { background: var(--theme-accent); }
+.modern-preview-empty { min-height: 200px; display: grid; place-content: center; padding: 24px; gap: 16px; background: #eef2f4; text-align: center; overflow-wrap: anywhere; }
+.modern-preview-empty small { color: #7e8993; }
+@media (max-width: 700px) {
+  .app-shell .album-wall-theme-picker { width: min(340px, calc(100vw - 32px)); grid-template-columns: 1fr; max-height: 60dvh; }
+  .app-shell .album-wall--modern .album-wall__masthead { min-height: 48px; padding-top: 4px; }
+  .modern-album__caption strong { font-size: 14px; }
+  .story-content > .album-wall.album-wall--modern { background-attachment: scroll; }
+}
+@media (prefers-reduced-motion: reduce) { .modern-corridor--hanging .modern-album > button { animation: none; } }

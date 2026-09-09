@@ -1,0 +1,34 @@
+.album-frontispiece { position: fixed; inset: 0; margin: auto; width: min(780px, calc(100vw - 40px)); max-width: none; max-height: calc(100dvh - 40px); padding: 0; overflow: auto; border: 1px solid #e1d5c4; border-radius: 14px; background: #fffbf4; color: #514436; box-shadow: 0 26px 90px #34291d33; }
+.album-frontispiece::backdrop { background: #3d362d57; backdrop-filter: blur(4px); }
+.album-frontispiece[open] { animation: frontispiece-arrive 220ms ease-out; }
+.album-frontispiece__layout { display: grid; grid-template-columns: 42% minmax(0, 1fr); }
+.album-frontispiece__cover { padding: 48px 32px 28px; background: radial-gradient(ellipse at top, #f8f2df, #e4e2d0); display: grid; align-content: center; gap: 22px; }
+.album-frontispiece__book { position: relative; padding: 16px 14px 22px 20px; background: #faf3e4; border: 1px solid #c9bea8; border-left: 7px solid #a3a98b; border-radius: 3px 9px 9px 3px; box-shadow: 3px 3px 0 #e7ddca, 6px 6px 0 #f8f1e3, 10px 18px 24px #5c513025; }
+.album-frontispiece__book img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.album-frontispiece__ribbon { position: absolute; top: -1px; right: 25px; width: 18px; height: 45px; background: #984d43; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 83%, 0 100%); }
+.album-frontispiece__book-note { display: block; margin-top: 18px; text-align: center; font: 8px Georgia, serif; letter-spacing: .2em; color: #8b7961; }
+.album-frontispiece__cover > p { margin: 0; text-align: center; font: 13px 'Songti SC', serif; color: #7b8065; }
+.album-frontispiece__details { min-width: 0; padding: 66px 38px 42px; align-self: center; }
+.album-frontispiece__eyebrow { margin: 0 0 28px; font: 13px 'Songti SC', serif; color: #965b4a; letter-spacing: .12em; }
+.album-frontispiece time { color: #9a8974; font: 12px Georgia, serif; letter-spacing: .12em; }
+.app-shell .album-frontispiece h2 { margin: 12px 0 20px; font: 32px/1.35 'Songti SC', serif; overflow-wrap: anywhere; }
+.album-frontispiece__story { white-space: pre-wrap; overflow-wrap: anywhere; font: 14px/1.9 'Songti SC', serif; color: #8b7b69; }
+.album-frontispiece__rule { height: 1px; background: linear-gradient(90deg, #d9c8b1, transparent); margin: 28px 0 24px; }
+.album-frontispiece__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.app-shell .album-frontispiece__actions a { display: flex; align-items: center; gap: 22px; min-height: 44px; padding: 8px 18px; border-radius: 7px; background: #8c463f; color: #fffaf1; text-decoration: none; font-size: 14px; }
+.app-shell .album-frontispiece__actions button { min-height: 44px; padding: 8px 10px; background: transparent; border: 0; color: #8b7764; font-size: 12px; }
+.app-shell .album-frontispiece__close { position: absolute; right: 12px; top: 12px; z-index: 2; width: 40px; min-height: 40px; padding: 0; border: 0; border-radius: 50%; background: #fffbf4d9; color: #95816c; font: 25px/1 sans-serif; }
+@keyframes frontispiece-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (max-width: 600px) {
+  .album-frontispiece { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); }
+  .album-frontispiece__layout { grid-template-columns: 1fr; }
+  .album-frontispiece__cover { padding: 22px 28px; grid-template-columns: 110px 1fr; gap: 22px; align-items: center; }
+  .album-frontispiece__book { padding: 8px 6px 10px 8px; border-left-width: 4px; }
+  .album-frontispiece__book img { aspect-ratio: 1; }
+  .album-frontispiece__book-note { margin-top: 10px; font-size: 5px; }
+  .album-frontispiece__ribbon { width: 12px; height: 26px; right: 14px; }
+  .album-frontispiece__details { padding: 26px 26px 30px; }
+  .album-frontispiece__eyebrow { margin-bottom: 18px; }
+  .app-shell .album-frontispiece h2 { font-size: 27px; }
+}
+@media (prefers-reduced-motion: reduce) { .album-frontispiece[open] { animation: none; } }

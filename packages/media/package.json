@@ -1,0 +1,25 @@
+{
+  "name": "@memory/media",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "pnpm clean && tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  },
+  "dependencies": {
+    "exifr": "^7.1.3",
+    "file-type": "^22.0.2",
+    "heic-decode": "2.1.0",
+    "sharp": "^0.35.4"
+  }
+}

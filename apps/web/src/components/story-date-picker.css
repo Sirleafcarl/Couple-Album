@@ -1,0 +1,25 @@
+.story-date { min-width: 0; }
+.story-date__field { position: relative; }
+.album-composer .story-date__field input { padding-right: 50px; font-variant-numeric: tabular-nums; font-weight: 500; }
+.app-shell .story-date__field > button { position: absolute; right: 3px; top: 2px; width: 42px; min-height: 42px; padding: 11px; border: 0; background: transparent; color: #8d6353; }
+.story-date__field svg { width: 20px; height: 20px; display: block; }
+.story-date__calendar { position: fixed; z-index: 10; box-sizing: border-box; margin: 0; padding: 12px; overflow-y: auto; overscroll-behavior: contain; border: 1px solid #dfd0be; border-radius: 12px; background: #fffcf5; box-shadow: 0 16px 48px #5f3c2129, 0 3px 10px #5f3c2114; }
+.album-composer .story-date__heading { display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 0 0 10px; margin: 0; border-bottom: 1px solid #eee4d6; }
+.app-shell .story-date__heading button { padding: 6px 10px; min-height: 40px; border: 0; background: transparent; color: #785d4b; }
+.story-date__heading button:first-child, .story-date__heading button:last-child { font-size: 26px; }
+.story-date__heading button:nth-child(2) { font: 17px/1.5 'Songti SC', serif; }
+.story-date__heading strong { font-weight: 500; color: #8f463d; }
+.story-date__heading span { padding-left: 8px; font-size: 12px; }
+.story-date__week, .story-date__days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; text-align: center; }
+.story-date__week { padding: 12px 0 6px; color: #9c8d79; font-size: 11px; }
+.app-shell .story-date__days button { position: relative; border: 1px solid transparent; border-radius: 7px; padding: 4px 0; min-height: 38px; background: transparent; font: 14px/1.4 Georgia, serif; color: #62574a; }
+.app-shell .story-date__days button:hover { background: #f4e9d9; }
+.app-shell .story-date__days button[aria-pressed='true'] { background: #8c463f; color: #fffaf1; box-shadow: 0 3px 7px #733b3226; }
+.story-date__days button[aria-current='date']::after { content: ''; width: 3px; height: 3px; border-radius: 50%; position: absolute; bottom: 4px; left: calc(50% - 1.5px); background: currentColor; }
+.story-date__bottom { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 10px; padding-top: 8px; border-top: 1px solid #eee4d6; }
+.story-date__bottom > span { font-size: 10px; color: #a49783; }
+.app-shell .story-date__bottom button { padding: 5px 8px; min-height: 36px; border: 0; background: transparent; font-size: 11px; color: #8c463f; }
+.story-date__jump { padding: 12px 0; }
+.story-date__jump > div { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; margin-top: 10px; }
+.app-shell .story-date__jump button { padding: 6px; font-size: 12px; }
+@media (max-width: 700px) { .app-shell .story-date__days button { min-height: 44px; } }

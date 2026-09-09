@@ -1,0 +1,58 @@
+/* The spine is shared; individual pages keep their own reading layout. */
+.app-shell { --spine-width: 180px; padding-inline-start: var(--spine-width); }
+.app-shell::before { inset-inline-start: var(--spine-width); }
+.story-content { min-width: 0; outline: none; }
+.story-spine {
+  position: fixed; inset: 0 auto 0 0; z-index: 30; width: var(--spine-width);
+  display: flex; flex-direction: column; overflow-y: auto; padding: 38px 16px 26px;
+  color: #65594b; border-right: 1px solid #c9b8a780;
+  background: repeating-linear-gradient(90deg, #84674704 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(0deg, #84674705 0 1px, transparent 1px 3px), #eee4d6;
+  box-shadow: 5px 0 20px #5f46270b;
+}
+.story-spine::after { content: ''; position: absolute; top: 0; bottom: 0; right: 7px; border-right: 1px dashed #a06f6050; pointer-events: none; }
+.story-brand { text-decoration: none; color: #843e38; text-align: center; display: grid; justify-items: center; gap: 14px; }
+.story-brand__mark { font: italic 48px/1 Georgia, serif; border: 1px solid #a2766255; border-radius: 50% 50% 43% 43%; width: 66px; height: 76px; display: grid; place-items: center; padding-bottom: 8px; }
+.story-brand__name { font: 21px/1.7 'Songti SC', 'STSong', serif; white-space: nowrap; }
+.story-brand__name small { display: block; font: 8px/2.5 Georgia, serif; letter-spacing: .18em; color: #978574; }
+.story-spine__chapter { font-size: 10px; text-align: center; letter-spacing: .12em; margin: 35px 0 18px; color: #9c8876; }
+.story-spine nav, .story-drawer nav { display: grid; gap: 12px; }
+.story-spine nav a, .story-drawer nav a { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 12px 15px; text-decoration: none; color: #736252; border: 1px solid transparent; border-radius: 3px; font-size: 14px; transition: background 140ms, color 140ms; }
+.story-spine nav a svg, .story-drawer nav a svg { width: 21px; height: 21px; flex-shrink: 0; }
+.story-spine nav a:hover, .story-drawer nav a:hover { background: #fffaf35c; }
+.story-spine nav a.active, .story-drawer nav a.active { color: #fff5e9; background: #8e443d; border-color: #763e35; box-shadow: 0 4px 10px #6d38311a; }
+.story-spine nav a.active { border-radius: 3px 12px 12px 3px; }
+.story-spine__foot { margin-top: auto; padding-top: 70px; text-align: center; color: #9b8975; }
+.story-spine__foot > span { display: block; width: 1px; height: 48px; background: linear-gradient(transparent, #a56557, transparent); margin: 0 auto 15px; }
+.story-spine__foot p { font: 12px/2 'Songti SC', serif; letter-spacing: .07em; }
+.story-spine__foot small { font-size: 7px; letter-spacing: .13em; }
+.app-shell .story-nav-toggle { display: none; position: fixed; z-index: 35; width: 44px; height: 44px; padding: 10px; color: #803e36; background: #f8f0e5; box-shadow: 0 4px 12px #57392418; }
+.story-nav-toggle svg { display: block; width: 100%; height: 100%; }
+.story-drawer { position: fixed; inset: 0 auto 0 0; margin: 0; width: min(320px, 90vw); height: 100%; max-height: 100%; border: 0; border-right: 1px solid #c6ae95; padding: 28px 22px; color: #665644; background: #f5ecde; }
+.story-drawer::backdrop { background: #332c2459; backdrop-filter: blur(3px); }
+.story-drawer__heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.story-drawer__heading strong { font: 25px/1.5 'Songti SC', serif; color: #843e38; }
+.story-drawer > p { font-size: 12px; color: #98836e; margin: 22px 0 34px; }
+.story-skip { position: fixed; left: 12px; top: -100px; z-index: 100; padding: 12px; background: #fff9ee; color: #813d34; }
+.story-skip:focus { top: 12px; }
+.story-content > .album-wall { width: 100%; max-width: none; margin: 0; border: 0; border-radius: 0; min-height: 100vh; min-height: 100dvh; }
+@media (768px <= width < 1200px) {
+  .app-shell { --spine-width: 72px; }
+  .story-spine { padding: 24px 10px; }
+  .story-brand__mark { width: 44px; height: 54px; font-size: 34px; }
+  .story-brand__name, .story-spine__chapter, .story-spine__foot, .story-spine nav a span { display: none; }
+  .story-spine nav { margin-top: 85px; }
+  .story-spine nav a { padding: 12px; justify-content: center; }
+  .app-shell .story-nav-toggle { display: block; top: 100px; left: 14px; }
+}
+@media (width < 768px) {
+  .app-shell { --spine-width: 0px; }
+  .story-spine { display: none; }
+  .app-shell .story-nav-toggle { display: block; left: 14px; top: max(12px, env(safe-area-inset-top)); }
+  .story-content { padding-top: calc(70px + env(safe-area-inset-top)); }
+  .story-content > .album-wall { min-height: calc(100dvh - 70px); }
+  .app-shell .library-page, .app-shell .uploads-page, .app-shell .album-detail { margin-inline: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-spine nav a, .story-drawer nav a { transition: none; }
+}
