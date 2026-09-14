@@ -2,6 +2,7 @@ import type { PhotoSummary } from '@memory/contracts/photos';
 import { useEffect, useState } from 'react';
 import { getPhotos } from '../api/photos.js';
 import { addAlbumPhotos } from '../api/albums.js';
+import { PhotoSelectionBar } from './photo-selection-bar.js';
 
 export function AlbumPhotoPicker({ albumId, onAdded }: { albumId: string; onAdded: () => void }) {
   const [owner, setOwner] = useState('all');
@@ -50,6 +51,9 @@ export function AlbumPhotoPicker({ albumId, onAdded }: { albumId: string; onAdde
       </div>
     </div>
     <p>每次最多选择 100 张，已经在相册里的照片会自动跳过。</p>
+    <PhotoSelectionBar selected={selected.length} loaded={photos.length} busy={busy}
+      onSelect={() => setSelected(current => [...new Set([...current, ...photos.map(photo => photo.id)])].slice(0, 100))}
+      onClear={() => setSelected([])} />
     {error ? <p role="alert">{error} <button onClick={() => setRevision(value => value + 1)}>重新加载</button></p> : null}
     {busy ? <p role="status">正在处理…</p> : null}
     {!busy && !error && photos.length === 0 ? <p>这里还没有照片，可以先从本地上传。</p> : null}

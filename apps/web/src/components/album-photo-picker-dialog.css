@@ -1,0 +1,26 @@
+.app-shell .album-photo-picker-dialog {
+  position:fixed; inset:0; margin:auto; width:min(880px,calc(100vw - 32px));
+  height:min(720px,calc(100dvh - 40px)); max-height:calc(100dvh - 40px);
+  box-sizing:border-box; padding:0; border:1px solid var(--kitty-border,#e2d6ca);
+  border-radius:22px; background:var(--kitty-surface,#fffcf7); color:var(--kitty-ink,#574b42);
+  box-shadow:0 24px 80px #35202b38; overflow:hidden;
+}
+.app-shell .album-photo-picker-dialog[open] {display:flex; flex-direction:column;}
+.album-photo-picker-dialog::backdrop {background:#30232a66;backdrop-filter:blur(5px);}
+.album-photo-picker-dialog__bar {display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 20px;border-bottom:1px solid var(--kitty-border,#e2d6ca);flex-shrink:0;}
+.album-photo-picker-dialog__bar span {font-size:13px;}
+.album-photo-picker-dialog__bar button {min-height:44px;padding:8px 16px;}
+.app-shell .album-photo-picker-dialog .album-picker {padding:16px 20px 0;margin:0;min-height:0;overflow:auto;flex:1;background:transparent;border:0;overscroll-behavior:contain;}
+.app-shell .album-photo-picker-dialog .wall-section-heading {display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;}
+.app-shell .album-photo-picker-dialog h2 {font-size:22px;margin:0;}
+.app-shell .album-photo-picker-dialog .filter-group {display:flex;flex-wrap:wrap;gap:6px;}
+.app-shell .album-photo-picker-dialog .filter-group button {min-height:44px;padding:6px 12px;font-size:12px;}
+.app-shell .album-photo-picker-dialog .album-picker-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+.app-shell .album-photo-picker-dialog .album-picker-grid label {min-width:0;}
+.app-shell .album-photo-picker-dialog .album-picker-grid strong {display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.app-shell .album-photo-picker-dialog .album-picker > .wall-toolbar {position:sticky;bottom:0;background:var(--kitty-surface,#fffcf7);padding:12px 0;margin-top:12px;z-index:1;border-top:1px solid var(--kitty-border,#e2d6ca);}
+@media(max-width:600px){
+  .app-shell .album-photo-picker-dialog {width:calc(100vw - 16px);height:calc(100dvh - 24px);max-height:calc(100dvh - 24px);border-radius:16px;}
+  .app-shell .album-photo-picker-dialog .album-picker {padding-inline:12px;}
+  .app-shell .album-photo-picker-dialog .album-picker-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+}

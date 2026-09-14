@@ -1,0 +1,71 @@
+import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
+import { E2E_WEB_ORIGIN, requireE2eCredentials } from './environment.js';
+
+test('library native upload, two-confirmation trash and original-album recovery on desktop, tablet and phone', async ({ page, playwright }, testInfo) => {
+  test.setTimeout(100_000);
+  const credentials = requireE2eCredentials();
+  await page.goto('/login');
+  await page.getByLabel('邮箱').fill(credentials.firstEmail);
+  await page.getByLabel('密码').fill(credentials.firstPassword);
+  await page.getByRole('button', { name: '登录', exact: true }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await page.addInitScript(() => { localStorage.setItem('memory:room-theme', 'kitty-dream'); });
+  const partner = await playwright.request.newContext({ baseURL: E2E_WEB_ORIGIN });
+  await partner.post('/api/auth/login', { headers: { origin: E2E_WEB_ORIGIN }, data: { email: credentials.partnerEmail, password: credentials.partnerPassword } });
+  const bytes = await readFile('packages/media/test/fixtures/landscape.jpg');
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  try {
+    for (const width of [1440, 820, 390]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/uploads');
+      await expect(page).toHaveURL(/\/library$/);
+      const filename = `trash-flow-${width}.jpg`;
+      const chooser = page.waitForEvent('filechooser');
+      await page.getByRole('button', { name: '上传照片', exact: true }).click();
+      await (await chooser).setFiles({ name: filename, mimeType: 'image/jpeg', buffer: Buffer.concat([bytes, Buffer.from(String(width))]) });
+      const card = page.locator('.photo-card').filter({ hasText: filename });
+      await expect(card.locator('img')).toBeVisible({ timeout: 20_000 });
+      const library = await (await page.request.get('/api/photos?owner=me&limit=100')).json();
+      const photo = library.items.find((item: { originalFilename: string }) => item.originalFilename === filename);
+      expect(photo).toBeTruthy();
+      const created = await page.request.post('/api/albums', { headers: { origin: E2E_WEB_ORIGIN }, data: { title: `Trash test ${width}`, occurredOn: '2026-09-09' } });
+      const album = await created.json();
+      expect((await page.request.post(`/api/albums/${album.id}/photos`, { headers: { origin: E2E_WEB_ORIGIN }, data: { photoIds: [photo.id] } })).ok()).toBe(true);
+      const original = photo.media.original;
+      expect((await partner.delete(`/api/photos/${photo.id}`, { headers: { origin: E2E_WEB_ORIGIN } })).status()).toBe(404);
+      await card.getByRole('button', { name: `移入回收站 ${filename}` }).click();
+      const dialog = page.getByRole('dialog', { name: '删除照片' });
+      await expect(dialog.getByRole('button', { name: '取消' })).toBeFocused();
+      await page.keyboard.press('Escape');
+      await expect(dialog).not.toBeVisible();
+      await expect(card.getByRole('button')).toBeFocused();
+      await card.getByRole('button').click();
+      await dialog.getByRole('button', { name: '继续删除' }).click();
+      expect((await page.request.get(original)).status()).toBe(200);
+      await page.screenshot({ path: testInfo.outputPath(`trash-confirm-${width}.png`) });
+      await dialog.getByRole('button', { name: '确认移入回收站' }).click();
+      await expect(card).toHaveCount(0);
+      expect((await page.request.get(original)).status()).toBe(404);
+      expect((await partner.get(original)).status()).toBe(404);
+      expect((await (await page.request.get(`/api/albums/${album.id}`)).json()).total).toBe(0);
+      await page.goto('/trash');
+      const trashed = page.locator('.trash-photo').filter({ hasText: filename });
+      await expect(trashed).toBeVisible();
+      expect((await partner.get(`/api/trash/${photo.id}/thumbnail`)).status()).toBe(404);
+      expect((await partner.post(`/api/trash/${photo.id}/restore`, { headers: { origin: E2E_WEB_ORIGIN } })).status()).toBe(404);
+      const thumbnail = await page.request.get(`/api/trash/${photo.id}/thumbnail`);
+      expect(thumbnail.status()).toBe(200);
+      expect(thumbnail.headers()['cache-control']).toBe('private, no-store');
+      expect(await page.locator('body').evaluate(body => body.scrollWidth)).toBeLessThanOrEqual(width);
+      await page.screenshot({ path: testInfo.outputPath(`trash-${width}.png`) });
+      await trashed.getByRole('button', { name: `恢复 ${filename}` }).click();
+      await expect(trashed).toHaveCount(0);
+      expect((await page.request.get(original)).status()).toBe(200);
+      const restored = await (await page.request.get(`/api/albums/${album.id}`)).json();
+      expect(restored.items.map((item: { id: string }) => item.id)).toContain(photo.id);
+    }
+    expect(errors).toEqual([]);
+  } finally { await partner.dispose(); }
+});

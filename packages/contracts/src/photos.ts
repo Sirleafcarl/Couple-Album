@@ -78,3 +78,16 @@ export type PhotoSummary = z.infer<typeof PhotoSummarySchema>;
 export type PhotoListResponse = z.infer<typeof PhotoListResponseSchema>;
 export type UploadSummary = z.infer<typeof UploadSummarySchema>;
 export type DuplicatePhotoResponse = z.infer<typeof DuplicatePhotoResponseSchema>;
+
+export const TrashListResponseSchema = z.strictObject({
+  items: z.array(z.strictObject({
+    id: z.string().uuid(),
+    originalFilename: z.string(),
+    deletedAt: IsoDateTimeSchema,
+    expiresAt: IsoDateTimeSchema,
+    thumbnail: z.string().startsWith('/api/trash/').nullable(),
+  })),
+  nextCursor: z.string().nullable(),
+  serverNow: IsoDateTimeSchema,
+});
+export type TrashListResponse = z.infer<typeof TrashListResponseSchema>;

@@ -1,6 +1,6 @@
 import type { PhotoSummary } from '@memory/contracts/photos';
 
-export function PhotoCard({ photo }: { photo: PhotoSummary }) {
+export function PhotoCard({ photo, onDelete }: { photo: PhotoSummary; onDelete?: ((photo: PhotoSummary) => void) | undefined }) {
   return (
     <article className={`photo-card photo-card--${photo.status}`}>
       <div className="photo-card__visual">
@@ -21,6 +21,9 @@ export function PhotoCard({ photo }: { photo: PhotoSummary }) {
       <div className="photo-card__meta">
         <strong>{photo.originalFilename}</strong>
         <span>{photo.owner.displayName} 的照片</span>
+        {onDelete ? <button className="photo-card__trash" type="button" aria-label={`移入回收站 ${photo.originalFilename}`} onClick={() => onDelete(photo)}>
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5M14 11v5" /></svg>
+        </button> : null}
       </div>
     </article>
   );

@@ -4,18 +4,12 @@ import { PhotoSummarySchema } from './photos.js';
 export const AlbumThemeIdSchema = z.enum([
   'secret-garden',
   'love-letters',
-  'date-adventure',
-  'daylight',
-  'heart-frequency',
   'sacred-joy',
-  'love-playground',
-  'blue-holiday',
   'cloud-candy',
-  'tropical-cutout',
   'clear-specimen',
-  'photo-exhibition',
-  'heart-track',
   'sky-letters',
+  'kitty-dream',
+  'kitty-gallery',
 ]);
 
 export const CalendarDateSchema = z.iso.date().refine((value) => {
@@ -117,6 +111,7 @@ export const AlbumDetailSchema = z.strictObject({
 });
 export const AddAlbumPhotosSchema = z.strictObject({ photoIds: z.array(z.string().uuid()).min(1).max(100) });
 export const AlbumWallVersionSchema = z.strictObject({ version: z.number().int().positive() });
+export const RemoveAlbumPhotosSchema = AlbumWallVersionSchema.extend({ photoIds: z.array(z.string().uuid()).min(1).max(100) });
 export const UpdateAlbumLayoutSchema = AlbumWallVersionSchema.extend({ layout: AlbumLayoutSchema });
 export const MoveAlbumPhotoSchema = AlbumWallVersionSchema.extend({ beforePhotoId: z.string().uuid().nullable() });
 export type AlbumLayout = z.infer<typeof AlbumLayoutSchema>;

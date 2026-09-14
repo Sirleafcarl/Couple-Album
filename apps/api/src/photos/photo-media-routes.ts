@@ -28,7 +28,7 @@ export function contentDisposition(filename: string): string {
   return `inline; filename="${fallback}"; filename*=UTF-8''${encode5987(clean)}`;
 }
 
-async function waitUntilReadable(stream: Readable): Promise<void> {
+export async function waitUntilReadable(stream: Readable): Promise<void> {
   if (stream.readableEnded) return;
   await new Promise<void>((resolve, reject) => {
     const cleanup = () => {
@@ -70,7 +70,7 @@ export function registerPhotoMediaRoutes(app: FastifyInstance, dependencies: Dep
     }
 
     reply.type(parsed.data.variant === 'original' ? photo.mimeType : 'image/webp');
-    reply.header('Cache-Control', 'private, max-age=31536000, immutable');
+    reply.header('Cache-Control', 'private, no-store');
     if (parsed.data.variant === 'original') {
       reply.header('Content-Length', photo.sizeBytes);
       reply.header('Content-Disposition', contentDisposition(photo.originalFilename));

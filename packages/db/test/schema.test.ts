@@ -35,6 +35,7 @@ describe('photo ingestion schema', () => {
       'captured_at',
       'status',
       'failure_code',
+      'purge_started_at',
       'sort_at',
       'created_at',
       'updated_at',
@@ -47,6 +48,7 @@ describe('photo ingestion schema', () => {
       'photos_status_sort_index',
       'photos_owner_status_sort_index',
       'photos_owner_hash_index',
+      'photos_trash_expiry_index',
     ]);
     expect(config.indexes.every((index) => index.config.unique === false)).toBe(true);
   });

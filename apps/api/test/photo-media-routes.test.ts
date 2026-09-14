@@ -72,7 +72,7 @@ describe('GET /api/photos/:photoId/media/:variant', () => {
     expect(response.rawPayload.toString()).toBe('original-bytes');
     expect(response.headers['content-type']).toContain('image/jpeg');
     expect(response.headers['content-length']).toBe('14');
-    expect(response.headers['cache-control']).toBe('private, max-age=31536000, immutable');
+    expect(response.headers['cache-control']).toBe('private, no-store');
     expect(response.headers['content-disposition']).toContain("filename*=UTF-8''");
     expect(response.headers['content-disposition']).not.toMatch(/[\r\n]/);
   });

@@ -30,6 +30,28 @@ async function fixture() {
   }))).returning();
   return { album: album!, me: me!, partner: partner!, records };
 }
+it('batch unlink removes only current album references and bumps version once', async () => {
+  const { album, records, me } = await fixture();
+  const [other] = await database.db.insert(albums).values({ title: 'Other', occurredOn: '2026-09-08', createdBy: me.id }).returning();
+  const ids = records.map(p => p.id);
+  await repo.add(album.id, ids); await repo.add(other!.id, ids);
+  const before = (await repo.get(album.id, 0, 40))!;
+  expect(await repo.removeMany(album.id, ids, before.version)).toEqual({ kind: 'updated' });
+  expect(await repo.get(album.id, 0, 40)).toMatchObject({ total: 0, version: before.version + 1 });
+  expect((await repo.get(other!.id, 0, 40))?.total).toBe(2);
+  expect(await database.db.select().from(photos)).toHaveLength(2);
+  expect((await database.db.select().from(photos)).every(p => !p.deletedAt)).toBe(true);
+});
+it('rejects the entire invalid or stale batch and serializes concurrent edits', async () => {
+  const { album, records } = await fixture(); const ids = records.map(p => p.id);
+  await repo.add(album.id, ids); const before = (await repo.get(album.id, 0, 40))!;
+  expect(await repo.removeMany(album.id, [ids[0]!, randomUUID()], before.version)).toEqual({ kind: 'photo-not-found' });
+  expect(await repo.removeMany(album.id, ids, before.version - 1)).toEqual({ kind: 'conflict' });
+  expect(await repo.get(album.id, 0, 40)).toMatchObject({ total: 2, version: before.version });
+  const results = await Promise.all(ids.map(id => repo.removeMany(album.id, [id], before.version)));
+  expect(results.map(r => r.kind).sort()).toEqual(['conflict', 'updated']);
+  expect((await repo.get(album.id, 0, 40))?.total).toBe(1);
+});
 it('links either owner exactly once and removal never deletes the original', async () => {
   const { album, records } = await fixture();
   expect(await repo.add(album.id, records.map(p => p.id))).toMatchObject({ kind: 'updated' });

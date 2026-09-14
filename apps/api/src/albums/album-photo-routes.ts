@@ -1,4 +1,4 @@
-import { AddAlbumPhotosSchema, AlbumWallVersionSchema, MoveAlbumPhotoSchema, UpdateAlbumLayoutSchema } from '@memory/contracts/albums';
+import { AddAlbumPhotosSchema, AlbumWallVersionSchema, MoveAlbumPhotoSchema, RemoveAlbumPhotosSchema, UpdateAlbumLayoutSchema } from '@memory/contracts/albums';
 import type { AlbumPhotoRepository, AlbumRepository, SessionRepository } from '@memory/db';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { z } from 'zod';
@@ -45,6 +45,12 @@ export function registerAlbumPhotoRoutes(app: FastifyInstance, deps: {
     const body = AddAlbumPhotosSchema.safeParse(request.body);
     if (!params.success || !body.success) return reply.code(400).send({ error: 'INVALID_ALBUM_INPUT' });
     return respond(reply, await deps.albumPhotos.add(params.data.albumId, body.data.photoIds));
+  });
+  app.delete('/api/albums/:albumId/photos', auth, async (request, reply) => {
+    const params = paramsSchema.safeParse(request.params);
+    const body = RemoveAlbumPhotosSchema.safeParse(request.body);
+    if (!params.success || !body.success) return reply.code(400).send({ error: 'INVALID_ALBUM_INPUT' });
+    return respond(reply, await deps.albumPhotos.removeMany(params.data.albumId, body.data.photoIds, body.data.version));
   });
   app.delete('/api/albums/:albumId/photos/:photoId', auth, async (request, reply) => {
     const params = photoParamsSchema.safeParse(request.params);

@@ -1,0 +1,23 @@
+.app-shell .album-detail-header {display:flex;justify-content:space-between;align-items:flex-start;gap:16px 28px;padding:4px 0 16px;margin:0 0 16px;background:none;border:0;box-shadow:none;}
+.album-detail-header__identity {min-width:0;flex:1;}
+.album-detail-header__identity > div {display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 16px;}
+.app-shell .album-detail-header h1 {font-size:clamp(24px,2.4vw,34px);line-height:1.25;margin:0;overflow-wrap:anywhere;color:var(--kitty-ink,#473c36);}
+.album-detail-header time {font-size:12px;color:var(--kitty-muted,#766a60);white-space:nowrap;}
+.album-detail-header__identity p {font-size:13px;line-height:1.6;margin:8px 0 0;max-width:640px;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--kitty-muted,#766a60);}
+.album-detail-header__tools {display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.album-detail-header__actions,.album-detail-header__layouts {display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.app-shell .album-detail-header button {font:inherit;font-size:13px;min-height:38px;padding:6px 10px;border:0;border-radius:8px;background:transparent;box-shadow:none;color:var(--kitty-ink,#574337);white-space:nowrap;cursor:pointer;}
+.app-shell .album-detail-header button:hover {background:#ffffff88;transform:none;}
+.app-shell .album-detail-header button:focus-visible {outline:2px solid var(--kitty-accent,#994b45);outline-offset:3px;}
+.app-shell .album-detail-header .album-detail-header__upload {background:var(--kitty-accent,#994b45);color:white;padding-inline:16px;}
+.album-detail-header__layouts > span {font-size:11px;opacity:.65;margin-right:4px;}
+.app-shell .album-detail-header__layouts button {font-size:12px;min-height:32px;border-radius:0;padding:4px 8px;border-bottom:2px solid transparent;}
+.app-shell .album-detail-header__layouts button[aria-pressed='true'] {border-bottom-color:var(--kitty-accent,#994b45);color:var(--kitty-accent,#994b45);background:transparent;font-weight:600;}
+.app-shell .album-detail-header button:disabled {opacity:.5;cursor:wait;}
+.app-shell .album-detail .album-detail-notice {display:block;width:fit-content;max-width:100%;box-sizing:border-box;margin:0 0 12px;padding:6px 12px;border:0;border-radius:8px;background:var(--kitty-surface,#fffcf7);color:var(--kitty-ink,#574337);font-size:12px;line-height:1.5;}
+@media(max-width:850px){
+  .app-shell .album-detail-header {flex-direction:column;gap:10px;padding-bottom:10px;}
+  .album-detail-header__tools {width:100%;flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 16px;}
+  .app-shell .album-detail-header button {min-height:44px;}
+  .album-detail-header__actions {gap:4px;}
+}

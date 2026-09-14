@@ -650,19 +650,7 @@ button:disabled {
   background-image: url("/themes/love-letters/scene.webp");
 }
 
-.album-wall--date-adventure {
-  --ink: #322c21;
-  --muted-ink: #655b4d;
-  --paper: #e9dec8;
-  --paper-deep: #c6b18d;
-  --thread: #a1372d;
-  --thread-dark: #5f211d;
-  --accent: #933126;
-}
 
-.album-wall--date-adventure .album-corridor__scene {
-  background-image: url("/themes/date-adventure/scene.webp");
-}
 
 .red-thread {
   position: absolute;
@@ -841,20 +829,8 @@ button:disabled {
   background-image: url("/themes/love-letters/scene.webp");
 }
 
-.album-wall--date-adventure .album-cover > button {
-  border-radius: 4px 18px 5px 14px;
-  background: #efe0c4;
-}
 
-.album-wall--date-adventure .album-cover:nth-of-type(even) > button {
-  border-radius: 20px 3px 16px 4px;
-  background: #ead4b1;
-}
 
-.album-wall--date-adventure .album-cover__photo {
-  border: 5px solid rgb(255 248 230 / 75%);
-  background-image: url("/themes/date-adventure/scene.webp");
-}
 
 .album-preview {
   position: fixed;

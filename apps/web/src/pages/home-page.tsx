@@ -50,28 +50,12 @@ export function HomePage() {
   }
 
   return (
-    <AppShell theme={theme.modern ? theme.id : undefined}>
+    <AppShell theme={albums.selected ? theme.id : undefined}>
       <main className={`album-wall ${theme.className} ${theme.modern ? 'album-wall--modern' : ''}`} style={theme.modern ? { '--theme-scene': theme.background ? `url("${theme.background}")` : 'none', '--theme-accent': theme.accent } as CSSProperties : undefined}>
-        <section className="album-wall__masthead">
+        <header className="gallery-command-bar">
           <div className="album-wall__identity">
-            <p className="eyebrow">ONLY FOR THE TWO OF US</p>
-            <strong>只属于我们的故事</strong>
-            <span>沿着一根红线，把平常日子慢慢写成以后。</span>
+            <h1>我们的故事</h1>
           </div>
-          {validStart ? <RelationshipTimer startedAt={relationshipStartedAt!} /> : <div className="story-anniversary-note"><p>设置纪念日后，在这里记录我们的时间</p><small>在环境配置中设置 VITE_RELATIONSHIP_STARTED_AT</small></div>}
-          <div className="album-wall__actions">
-            <span className="story-music-note">音乐功能尚未接入</span>
-            <button
-              className="album-wall__account"
-              disabled={signingOut}
-              onClick={handleSignOut}
-              type="button"
-            >
-              {signingOut ? '正在退出…' : `${user?.displayName ?? '我们'} · 退出`}
-            </button>
-          </div>
-        </section>
-
         <div className="album-wall__toolbar">
         {albums.years.length > 0 ? (
           <AlbumYearPicker
@@ -83,7 +67,19 @@ export function HomePage() {
         {albums.selected ? (
           <AlbumWallThemePicker onChange={handleThemeChange} value={selectedThemeId} />
         ) : null}
+        {albums.selected ? <button className="album-wall__create" type="button" onClick={() => setEditor('create')}>新建相册</button> : null}
         </div>
+        <details className="page-tools-more" onKeyDown={event => { if (event.key === 'Escape') { event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus(); } }}>
+          <summary>更多</summary>
+          <div className="page-tools-more__panel">
+            {validStart ? <RelationshipTimer startedAt={relationshipStartedAt!} /> : <p>设置纪念日后，在这里记录我们的时间</p>}
+            <p className="story-music-note">音乐功能尚未接入</p>
+            <button className="album-wall__account" disabled={signingOut} onClick={handleSignOut} type="button">
+              {signingOut ? '正在退出…' : `${user?.displayName ?? '我们'} · 退出`}
+            </button>
+          </div>
+        </details>
+        </header>
         {themeError ? <p className="album-wall__theme-error" role="status">主题没有保存成功，已恢复原来的样子。</p> : null}
 
         {albums.status === 'loading' ? (
@@ -101,6 +97,7 @@ export function HomePage() {
         ) : null}
         {albums.status === 'ready' && albums.selected ? (
           <AlbumCorridor
+            compactHeader
             autoPlay={!editor}
             focusAlbumId={focusAlbumId}
             onCreate={() => setEditor('create')}

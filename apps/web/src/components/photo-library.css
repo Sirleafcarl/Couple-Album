@@ -1,0 +1,45 @@
+.library-page .page-heading { gap: 16px; margin-bottom: 16px; align-items: center; }
+.library-page .page-heading h1 { margin-block: 4px; font-size: clamp(28px, 3vw, 44px); }
+.app-shell[data-kitty-theme] .library-page .page-heading { padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.library-page .filter-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.library-page .filter-group button { min-height: 44px; padding: 8px 14px; font-size: 14px; }
+.library-page .filter-group [aria-pressed='true'] { box-shadow: inset 0 -2px currentColor; }
+.library-upload-tools { margin-bottom: 20px; }
+.library-upload-disclosures { display: flex; gap: 20px; align-items: start; flex-wrap: wrap; }
+.library-upload-disclosures details { min-width: 0; }
+.library-upload-disclosures summary { cursor: pointer; padding: 8px 0; font-size: 13px; }
+.library-upload-disclosures label { display: grid; gap: 8px; padding-block: 8px; font-size: 14px; }
+.library-upload-disclosures select { max-width: min(400px, 75vw); min-height: 44px; }
+.library-upload-history { max-height: 280px; overflow: auto; width: min(620px, 75vw); font-size: 13px; }
+.library-upload-history strong { overflow-wrap: anywhere; }
+.app-shell .library-page .photo-uploader--compact[hidden] { display: none; }
+.photo-card__meta { position: relative; padding-right: 44px; }
+.app-shell .photo-card__trash { position: absolute; right: 0; bottom: 0; width: 40px; height: 40px; padding: 10px; border: 0; border-radius: 50%; background: transparent; box-shadow: none; color: inherit; opacity: .65; }
+.app-shell .photo-card__trash:is(:hover,:focus-visible) { opacity: 1; background: #ffffffb3; }
+.app-shell .photo-trash-dialog { width: min(460px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); box-sizing: border-box; overflow: auto; padding: 28px; border: 1px solid var(--kitty-border, #ded8cf); border-radius: 24px; color: var(--kitty-ink, #514b43); background: var(--kitty-surface, #fffaf5); box-shadow: 0 24px 90px #40283a30; }
+.photo-trash-dialog::backdrop { background: #29202b65; backdrop-filter: blur(6px); }
+.photo-trash-dialog h2 { font-size: 24px; margin-block: 10px 18px; }
+.photo-trash-dialog p { font-size: 14px; line-height: 1.8; }
+.photo-trash-dialog__filename { overflow-wrap: anywhere; font-weight: 600; }
+.photo-trash-dialog footer { display: flex; justify-content: end; gap: 10px; margin-top: 24px; }
+.app-shell .photo-trash-dialog button { min-height: 44px; padding: 10px 16px; font-size: 14px; }
+.trash-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 24px; }
+.trash-photo { min-width: 0; display: grid; gap: 8px; }
+.trash-photo__image { aspect-ratio: 4 / 3; display: grid; place-items: center; overflow: hidden; background: #ffffff70; border: 1px solid #ffffffa0; border-radius: 16px; font-size: 14px; }
+.trash-photo__image img { width: 100%; height: 100%; object-fit: cover; }
+.trash-photo > strong { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 15px; }
+.trash-photo > div:last-child { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; }
+.app-shell .trash-photo button { min-height: 44px; padding: 8px 18px; font-size: 14px; }
+.trash-empty { padding: 70px 12px; text-align: center; }
+.trash-empty h2 { font-size: 24px; }
+.library-notice { font-size: 14px; }
+.trash-footnote { font-size: 12px; line-height: 1.8; opacity: .8; }
+.trash-page .page-heading p { font-size: 14px; }
+@media (max-width: 600px) {
+  .library-page .page-heading { flex-direction: column; align-items: start; }
+  .library-page .filter-group { width: 100%; gap: 6px; }
+  .library-page .filter-group button { padding-inline: 10px; }
+  .trash-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; }
+  .trash-photo > div:last-child { flex-wrap: wrap; }
+  .photo-trash-dialog footer { flex-wrap: wrap; }
+}

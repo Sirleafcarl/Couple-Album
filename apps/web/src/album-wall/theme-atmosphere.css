@@ -1,0 +1,25 @@
+/* Three decorative layers per visible year, independent of album count. */
+.theme-atmosphere { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.album-wall--modern .album-corridor__viewport { position: relative; z-index: 1; }
+.theme-atmosphere i { position: absolute; display: block; pointer-events: none; }
+.theme-atmosphere--sacred-joy i { inset: 5%; background: radial-gradient(circle at 15% 30%, #fff6c6 0 2px, transparent 4px), radial-gradient(circle at 65% 70%, #ffe588 0 2px, transparent 5px), radial-gradient(circle at 85% 20%, #fff8e4 0 1px, transparent 4px); animation: golden-dust 14s ease-in-out infinite; }
+.theme-atmosphere--sacred-joy i:nth-child(2) { animation-delay: -5s; transform: rotate(30deg); }
+.theme-atmosphere--sacred-joy i:nth-child(3) { animation-delay: -9s; }
+.theme-atmosphere--cloud-candy i, .theme-atmosphere--sky-letters i { width: 45%; height: 90px; left: -5%; top: 10%; border-radius: 50%; background: #ffffff75; filter: blur(22px); animation: cloud-travel 28s ease-in-out infinite alternate; }
+.theme-atmosphere--cloud-candy i:nth-child(2), .theme-atmosphere--sky-letters i:nth-child(2) { top: 75%; left: 50%; animation-delay: -14s; }
+.theme-atmosphere--cloud-candy i:nth-child(3), .theme-atmosphere--sky-letters i:nth-child(3) { display: none; }
+.theme-atmosphere--clear-specimen i:first-child { width: 16%; height: 130%; left: 25%; top: -15%; background: linear-gradient(90deg, transparent, #ffffffaa, #c6deef33, transparent); transform: rotate(20deg); animation: prism-pass 20s ease-in-out infinite alternate; }
+.album-wall--cloud-candy .modern-album__image { animation: cloud-glow 8s ease-in-out infinite alternate; animation-delay: var(--sway-delay); }
+.album-wall--sky-letters .modern-album > button { animation: letter-tilt 12s ease-in-out infinite alternate; animation-delay: var(--sway-delay); }
+.album-corridor__stage[data-motion='paused'] *, .album-corridor__stage[data-motion='paused'] *::before, .album-corridor__stage[data-motion='paused'] *::after,
+.modern-album:hover *, .modern-album:focus-within * { animation-play-state: paused !important; }
+@keyframes golden-dust { 0%, 100% { opacity: .15; translate: 0 12px; } 50% { opacity: .75; translate: 0 -16px; } }
+@keyframes cloud-travel { to { transform: translateX(18%); opacity: .4; } }
+@keyframes prism-pass { to { translate: 24vw 0; opacity: .3; } }
+@keyframes cloud-glow { to { box-shadow: 0 14px 26px #97b7d326; } }
+@keyframes letter-tilt { from { transform: rotate(-.6deg); } to { transform: rotate(.6deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .theme-atmosphere { display: none; }
+  .album-wall--modern .album-corridor__stage * { animation: none !important; transition: none !important; }
+}
+@media (max-width: 700px) { .theme-atmosphere i:nth-child(3) { display: none; } }

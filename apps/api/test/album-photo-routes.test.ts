@@ -16,6 +16,22 @@ function fixture() {
   deps.albumPhotos.remove = vi.fn(async () => ({ kind: 'updated' as const }));
   return { deps, app: buildApp(deps) };
 }
+it('batch unlink requires auth, validates limits and forwards one versioned operation', async () => {
+  const { deps, app } = fixture();
+  deps.albumPhotos.removeMany = vi.fn(async () => ({ kind: 'updated' as const }));
+  const url = `/api/albums/${albumId}/photos`;
+  try {
+    expect((await app.inject({ method: 'DELETE', url, payload: { photoIds: [photoId], version: 3 } })).statusCode).toBe(401);
+    for (const payload of [{ photoIds: [], version: 3 }, { photoIds: Array(101).fill(photoId), version: 3 }, { photoIds: [photoId] }, { photoIds: [photoId], version: 3, ownerId: partner.id }]) {
+      expect((await app.inject({ method: 'DELETE', url, headers, payload })).statusCode).toBe(400);
+    }
+    expect(deps.albumPhotos.removeMany).not.toHaveBeenCalled();
+    expect((await app.inject({ method: 'DELETE', url, headers, payload: { photoIds: [photoId], version: 3 } })).statusCode).toBe(200);
+    expect(deps.albumPhotos.removeMany).toHaveBeenCalledExactlyOnceWith(albumId, [photoId], 3);
+    deps.albumPhotos.removeMany = vi.fn(async () => ({ kind: 'conflict' as const }));
+    expect((await app.inject({ method: 'DELETE', url, headers, payload: { photoIds: [photoId], version: 2 } })).statusCode).toBe(409);
+  } finally { await app.close(); }
+});
 it('authenticates detail and all mutations, allows partner-owned albums, and rejects forged fields', async () => {
   const { deps, app } = fixture();
   try {

@@ -18,7 +18,7 @@ export function AlbumPreviewDialog({ album, themeId, onClose, onEdit }: {
     close.current?.focus({ preventScroll: true });
     return () => { if (node?.open) node.close?.(); };
   }, []);
-  return <dialog ref={dialog} className="album-frontispiece" aria-labelledby={titleId} aria-modal="true"
+  return <dialog ref={dialog} className="album-frontispiece" data-preview-theme={themeId} aria-labelledby={titleId} aria-modal="true"
     onCancel={event => { event.preventDefault(); onClose(); }}>
     <button ref={close} className="album-frontispiece__close" type="button" aria-label="关闭相册预览" onClick={onClose}>×</button>
     <div className="album-frontispiece__layout">
@@ -26,12 +26,12 @@ export function AlbumPreviewDialog({ album, themeId, onClose, onEdit }: {
         <div className="album-frontispiece__book">
           {cover ? <img src={cover} alt={`${album.title}的封面`} /> : <div className="modern-preview-empty">{album.title}<small>等待我们的照片</small></div>}
           <span aria-hidden="true" className="album-frontispiece__ribbon" />
-          <span className="album-frontispiece__book-note">OUR LITTLE STORY</span>
+          <span className="album-frontispiece__book-note">{themeId === 'sacred-joy' ? 'A LITTLE MIRACLE' : 'OUR LITTLE STORY'}</span>
         </div>
-        <p>把这一天，轻轻收藏。</p>
+        <p>{themeId === 'sacred-joy' ? '平凡的一天，也值得被加冕' : '把这一天，轻轻收藏。'}</p>
       </aside>
       <section className="album-frontispiece__details">
-        <p className="album-frontispiece__eyebrow">这一页属于我们</p>
+        <p className="album-frontispiece__eyebrow">{themeId === 'sacred-joy' ? '云端珍藏 · 我们的小小神迹' : '这一页属于我们'}</p>
         <time dateTime={album.occurredOn}>{album.occurredOn.replaceAll('-', ' · ')}</time>
         <h2 id={titleId}>{album.title}</h2>
         {album.description.trim() ? <p className="album-frontispiece__story">{album.description}</p> : null}

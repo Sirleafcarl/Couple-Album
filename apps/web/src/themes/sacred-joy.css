@@ -1,0 +1,63 @@
+/* Keep the approved Naiwa cloud painting; add depth around, never over, real photos. */
+.app-shell[data-theme='sacred-joy'] { --ink:#49341f; --muted-ink:#796344; color:var(--ink); background:#fff7e7; }
+.app-shell[data-theme='sacred-joy'] .story-spine { background:linear-gradient(160deg,#fffdf6,#f3e4c4); border-color:#d7bd83; }
+.app-shell[data-theme='sacred-joy'] :is(.story-brand__name,.story-brand__mark,.story-spine nav a) { color:#63481f; }
+.app-shell[data-theme='sacred-joy'] .story-brand__mark { width:72px;height:72px;display:grid;place-items:center;margin-inline:auto;border:1px solid #c9a660;border-radius:50%;font:italic 38px Georgia,serif;box-shadow:0 0 0 5px #fff9e8,0 0 0 6px #dac48f; }
+.app-shell[data-theme='sacred-joy'] .story-spine nav a.active { color:#fff9e9;background:linear-gradient(135deg,#9b692b,#754820);border:1px solid #ac8747; }
+.app-shell[data-theme='sacred-joy'] .story-spine__foot {color:#796344;}
+.app-shell[data-theme='sacred-joy'] :is(.story-nav-toggle,.story-drawer) {background:#fff8e9;color:#49341f;}
+.story-content > .album-wall.album-wall--sacred-joy {--ink:#49341f;--muted-ink:#796344;background-color:#f6e9cb;background-attachment:scroll;background-position:center 64px;background-repeat:no-repeat;}
+.app-shell .album-wall--sacred-joy .gallery-command-bar {background:linear-gradient(#fffaf1f2,#fff7e7c9);border-bottom:1px solid #cfb77860;}
+.app-shell .album-wall--sacred-joy .gallery-command-bar h1 {font-family:'Songti SC',serif;color:#49341f;}
+.app-shell .album-wall--sacred-joy .album-corridor__months button {background:#fff9e9c9;color:#674d29;}
+.app-shell .album-wall--sacred-joy .gallery-command-bar button.album-wall__create {background:linear-gradient(135deg,#a06a27,#75421e);color:#fffaf0;}
+
+/* The three existing scene layers remain constant even for large collections. */
+.theme-atmosphere--sacred-joy i:first-child {inset:-20% -10% 0;background:conic-gradient(from 160deg at 73% 4%,transparent 0deg,#fff4ca44 8deg,transparent 18deg,#fff7de55 25deg,transparent 35deg);animation:sacred-rays 22s ease-in-out infinite alternate;transform-origin:73% 4%;}
+.theme-atmosphere--sacred-joy i:nth-child(2) {inset:0;background:radial-gradient(circle at 18% 35%,#fff6ce 0 1px,transparent 3px),radial-gradient(circle at 60% 70%,#fff9de 0 2px,transparent 4px),radial-gradient(circle at 88% 40%,#fff6ce 0 1px,transparent 3px);background-size:310px 260px;transform:none;animation:golden-dust 18s ease-in-out infinite;}
+.theme-atmosphere--sacred-joy i:nth-child(3) {inset:auto -10% -35px;height:160px;background:radial-gradient(ellipse at 25% 80%,#fffaf1b3,transparent 55%),radial-gradient(ellipse at 75% 95%,#fff7e8a6,transparent 60%);animation:sacred-clouds 24s ease-in-out infinite alternate;}
+.app-shell .album-wall--sacred-joy .modern-album > button {position:relative;isolation:isolate;animation:sacred-float 9s ease-in-out infinite;animation-delay:var(--sway-delay);transition:translate .3s ease;}
+.app-shell .album-wall--sacred-joy .modern-album > button:hover {filter:none;translate:0 -3px;}
+.album-wall--sacred-joy .sacred-album__halo {position:absolute;z-index:-1;pointer-events:none;width:116%;aspect-ratio:1;left:-8%;top:-14px;border:1px solid #fff2b2c9;border-radius:50%;box-shadow:0 0 0 7px #fff2b21a,0 0 0 8px #fff4ce55,0 0 30px #ffe7a366;opacity:.6;transition:opacity .3s,scale .3s;}
+.album-wall--sacred-joy .modern-album > button:is(:hover,:focus-visible) .sacred-album__halo {opacity:1;scale:1.04;}
+.album-wall--sacred-joy .sacred-album__cloud {position:absolute;pointer-events:none;z-index:-1;left:-13%;width:126%;height:64px;bottom:-22px;background:radial-gradient(ellipse at 50% 35%,#fffdf4 0 28%,transparent 62%),radial-gradient(ellipse at 22% 58%,#fff6e0 0 22%,transparent 53%),radial-gradient(ellipse at 79% 60%,#fff8e8 0 24%,transparent 52%);mask-image:radial-gradient(ellipse at center,#000 25%,transparent 70%);}
+.app-shell .album-wall--sacred-joy .modern-album__image {position:relative;border:6px solid #f2deb0;border-radius:52% 52% 4px 4px;box-shadow:0 0 0 1px #a77c38,0 0 0 3px #ffedbb,4px 6px 0 #af874566,0 18px 25px #79562129;background:#fff9eb;}
+.app-shell .album-wall--sacred-joy .modern-album:nth-of-type(2n) .modern-album__image {border-radius:5px;}
+.app-shell .album-wall--sacred-joy .modern-album__caption {position:relative;height:52px;padding:7px 6px;gap:3px;background:linear-gradient(#fffaf0,#f4e6c7);border:1px solid #c7a465;border-top:0;border-radius:0 0 8px 8px;text-align:center;}
+.app-shell .album-wall--sacred-joy .modern-album__caption strong {font-family:'Songti SC',serif;font-weight:600;color:#49341f;}
+.album-wall--sacred-joy .modern-album__caption time {color:#7a6038;letter-spacing:.08em;}
+.album-wall--sacred-joy .modern-album__empty {background:radial-gradient(ellipse at 50% 20%,#fffdf8,#f5e9cb);color:#806846;}
+.album-wall--sacred-joy .modern-album__empty > span {font:italic 32px Georgia,serif;color:#a77830;opacity:.65;}
+
+/* Real dialogs, not screenshots: all form, close and focus behavior is retained. */
+.app-shell[data-theme='sacred-joy'] :is(.album-frontispiece,.album-composer) {border:1px solid #c4a15f;border-radius:18px;background:#fffaf0;color:#49341f;box-shadow:0 0 0 4px #fff5dd66,0 25px 90px #553a2440;}
+.app-shell[data-theme='sacred-joy'] :is(.album-frontispiece,.album-composer)::backdrop {background:#3b2a224f;backdrop-filter:none;}
+.app-shell[data-theme='sacred-joy'] :is(.album-frontispiece__cover,.album-composer__preview) {background:linear-gradient(0deg,#fff4dad9,#fff6de55),url('/themes/sacred-joy/scene.webp') 75% 35%/cover;}
+.app-shell[data-theme='sacred-joy'] :is(.album-frontispiece__book,.album-composer__book) {border:1px solid #bb914d;border-left:1px solid #bb914d;border-radius:50% 50% 8px 8px;background:#fff9e9;box-shadow:0 0 0 4px #ecd5a0,0 0 0 5px #fff6db,0 14px 30px #63441c26;overflow:hidden;}
+.app-shell[data-theme='sacred-joy'] :is(.album-frontispiece__ribbon,.album-composer__ribbon) {display:none;}
+.app-shell[data-theme='sacred-joy'] .album-frontispiece__cover > p {color:#6e4c26;font-size:12px;line-height:1.7;}
+.app-shell[data-theme='sacred-joy'] :is(.album-frontispiece__eyebrow,.album-frontispiece__book-note,.album-composer__edition) {color:#8b581b;}
+.app-shell[data-theme='sacred-joy'] .album-frontispiece__details {background:radial-gradient(ellipse at 100% 0,#ffedbc66,transparent 65%),#fffaf0;align-self:stretch;display:flex;flex-direction:column;justify-content:center;}
+.app-shell[data-theme='sacred-joy'] .album-frontispiece h2 {font-family:'Songti SC',serif;}
+.app-shell[data-theme='sacred-joy'] .album-frontispiece__actions a,
+.app-shell[data-theme='sacred-joy'] .album-editor__paper footer button[type='submit'],
+.app-shell[data-theme='sacred-joy'] .story-date__days button[aria-pressed='true'] {background:linear-gradient(135deg,#9f6828,#75451f);color:#fffaf0;border-color:#91672d;}
+.app-shell[data-theme='sacred-joy'] .album-editor__paper {background:#fffaf0;color:#49341f;}
+.app-shell[data-theme='sacred-joy'] .album-composer__cover-art:not(:has(img)) {background:radial-gradient(ellipse at top,#fffdf4,#eedcb3);color:#74572f;}
+.app-shell[data-theme='sacred-joy'] .album-editor__paper :is(input,textarea) {background:#fffdf7;border-color:#dac49a;color:#49341f;}
+.app-shell[data-theme='sacred-joy'] .story-date__calendar {background:#fffaf0;border-color:#c9aa70;}
+.app-shell[data-theme='sacred-joy'] :is(button,a,input,textarea):focus-visible {outline:2px solid #8b581b;outline-offset:3px;}
+@keyframes sacred-float {0%,100% {transform:translateY(0);}50% {transform:translateY(-7px);}}
+@keyframes sacred-rays {from {rotate:-3deg;opacity:.45;}to {rotate:3deg;opacity:.8;}}
+@keyframes sacred-clouds {from {translate:-2% 0;}to {translate:2% -8px;}}
+.album-wall--sacred-joy .modern-album:is(:hover,:focus-within) > button {animation-play-state:paused;}
+@media(prefers-reduced-motion:reduce) {
+  .app-shell .album-wall--sacred-joy .modern-album > button {animation:none;transition:none;}
+  .album-wall--sacred-joy .sacred-album__halo {transition:none;}
+  .app-shell .album-wall--sacred-joy .modern-album > button:hover {translate:none;}
+}
+@media(max-width:700px) {
+  .album-wall--sacred-joy .sacred-album__halo {width:108%;left:-4%;top:-8px;}
+  .app-shell .album-wall--sacred-joy .modern-album__image {border-width:4px;}
+  .app-shell[data-theme='sacred-joy'] .album-frontispiece__book {border-radius:8px;}
+}

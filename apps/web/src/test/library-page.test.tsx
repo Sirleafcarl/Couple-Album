@@ -43,6 +43,42 @@ function renderLibrary(fetchMock: typeof fetch) {
 }
 
 describe('library page', () => {
+  it('keeps auxiliary upload controls in a collapsed More beside a compact title', async () => {
+    renderLibrary(vi.fn<typeof fetch>(async url => String(url) === '/api/auth/session' ? json({ user: me }) : json({ items: [], nextCursor: null })));
+    await screen.findByRole('heading', { name: '照片库', level: 1 });
+    expect(screen.queryByText('每一张，都有它的位置')).not.toBeInTheDocument();
+    const more = screen.getByText('更多').closest('details');
+    expect(more).not.toHaveAttribute('open');
+    expect(more).toContainElement(screen.getByText('上传选项'));
+    expect(more).toContainElement(screen.getByText('最近上传'));
+    fireEvent.click(screen.getByText('更多'));
+    expect(more).toHaveAttribute('open');
+  });
+  it('opens the system photo picker directly and requires two confirmations to trash only my photo', async () => {
+    const id = '30000000-0000-4000-8000-000000000003';
+    const fetchMock = vi.fn<typeof fetch>(async (url, options) => {
+      if (String(url) === '/api/auth/session') return json({ user: me });
+      if (options?.method === 'DELETE') return new Response(null, { status: 204 });
+      return json({ items: [photo(id, 'ready'), photo('40000000-0000-4000-8000-000000000004', 'ready', { id: partnerId, displayName: 'Bob' })], nextCursor: null });
+    });
+    renderLibrary(fetchMock);
+    await screen.findByText('Alice 的照片');
+    expect(screen.queryByRole('link', { name: '上传中心' })).not.toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: '回收站' }).length).toBeGreaterThan(0);
+    const picker = vi.spyOn(HTMLInputElement.prototype, 'click');
+    fireEvent.click(screen.getByRole('button', { name: '上传照片' }));
+    expect(picker).toHaveBeenCalledTimes(1);
+    expect(document.querySelector('input[type=file]')).toHaveAttribute('multiple');
+    const remove = screen.getAllByRole('button', { name: /移入回收站/ });
+    expect(remove).toHaveLength(1);
+    fireEvent.click(remove[0]!);
+    expect(fetchMock.mock.calls.some(([, init]) => init?.method === 'DELETE')).toBe(false);
+    fireEvent.click(screen.getByRole('button', { name: '继续删除' }));
+    expect(fetchMock.mock.calls.some(([, init]) => init?.method === 'DELETE')).toBe(false);
+    fireEvent.click(screen.getByRole('button', { name: '确认移入回收站' }));
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledWith(`/api/photos/${id}`, expect.objectContaining({ method: 'DELETE' })));
+    picker.mockRestore();
+  });
   it('shows a loading state while the first photo page is pending', async () => {
     const pending = new Promise<Response>(() => undefined);
     renderLibrary(vi.fn<typeof fetch>()

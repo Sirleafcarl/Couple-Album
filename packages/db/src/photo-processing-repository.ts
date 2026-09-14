@@ -1,5 +1,6 @@
 import { and, eq, sql } from 'drizzle-orm';
 import type { Database } from './client.js';
+import type { PhotoTransaction } from './photo-trash-repository.js';
 import { jobs, photos } from './schema.js';
 
 export type ProcessingPhoto = {
@@ -32,7 +33,7 @@ export type PhotoProcessingRepository = {
   }): Promise<{ status: 'retry' | 'failed'; nextRunAt: Date | null }>;
 };
 
-export function createPhotoProcessingRepository(db: Database): PhotoProcessingRepository {
+export function createPhotoProcessingRepository(db: Database | PhotoTransaction): PhotoProcessingRepository {
   return {
     async findById(photoId) {
       const [photo] = await db.select({

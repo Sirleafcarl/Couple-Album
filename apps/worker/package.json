@@ -9,7 +9,7 @@
     "build": "pnpm clean && tsc -p tsconfig.build.json",
     "start": "node dist/main.js",
     "test": "vitest run",
-    "test:restart": "RUN_RESTART_TESTS=true vitest run test/restart-recovery.test.ts",
+    "test:restart": "RUN_RESTART_TESTS=true vitest run test/restart-recovery.test.ts test/trash-restart.test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

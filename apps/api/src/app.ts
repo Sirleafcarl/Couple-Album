@@ -16,6 +16,7 @@ import { registerPhotoMediaRoutes } from './photos/photo-media-routes.js';
 import { registerAlbumRoutes } from './albums/album-routes.js';
 import { registerAlbumPhotoRoutes } from './albums/album-photo-routes.js';
 import type { AlbumPhotoRepository } from '@memory/db';
+import { registerPhotoTrashRoutes, type TrashRoutesRepository } from './photos/photo-trash-routes.js';
 
 export type AppDependencies = {
   config: AppConfig;
@@ -23,6 +24,7 @@ export type AppDependencies = {
   sessions: SessionRepository;
   photoUploads: PhotoUploadService;
   photos: PhotoRepository;
+  trash?: TrashRoutesRepository;
   uploads: UploadRepository;
   albums: AlbumRepository;
   albumPhotos: AlbumPhotoRepository;
@@ -77,6 +79,9 @@ export function buildApp(dependencies: AppDependencies): FastifyInstance {
       photos: dependencies.photos,
       media: dependencies.media,
       clock,
+    });
+    if (dependencies.trash) registerPhotoTrashRoutes(application, {
+      trash: dependencies.trash, sessions: dependencies.sessions, media: dependencies.media, clock,
     });
     registerAlbumRoutes(application, {
       sessions: dependencies.sessions,

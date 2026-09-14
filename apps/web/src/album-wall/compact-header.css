@@ -1,0 +1,72 @@
+/* Compact page controls; loaded after theme styles so themes cannot inflate them. */
+.app-shell .library-command-bar,
+.app-shell .album-wall .gallery-command-bar {display:flex;align-items:center;gap:8px 20px;position:relative;isolation:isolate;z-index:5;min-height:56px;padding:0 0 12px;margin:0;background:none;border:0;border-radius:0;box-shadow:none;}
+.app-shell .album-wall .gallery-command-bar {padding:8px 24px 4px;}
+.app-shell .library-command-bar h1,
+.app-shell .album-wall .gallery-command-bar h1 {font-size:24px;line-height:1.3;margin:0;white-space:nowrap;letter-spacing:0;}
+.app-shell .library-command-bar h1 {margin-right:auto;}
+.app-shell .album-wall .gallery-command-bar .album-wall__toolbar {display:flex;flex:1;align-items:center;padding:0;gap:8px;min-width:0;}
+.app-shell .album-wall .gallery-command-bar .album-year-picker {flex:1;min-width:0;overflow-x:auto;flex-wrap:nowrap;}
+.app-shell .library-command-bar .filter-group {gap:4px;flex-wrap:nowrap;align-items:center;}
+.app-shell .library-command-bar button,
+.app-shell .album-wall .gallery-command-bar :is(.album-year-picker button,.album-wall__create,.album-wall-theme-control > button,.album-wall__account),
+.app-shell .album-wall .album-corridor__months button {min-height:44px;padding:6px 10px;border:0;border-radius:8px;background:transparent;box-shadow:none;font-size:13px;white-space:nowrap;transform:none;}
+.app-shell .library-command-bar button[aria-pressed='true'],
+.app-shell .album-wall .gallery-command-bar .album-year-picker button[aria-pressed='true'],
+.app-shell .album-wall .album-corridor__months button[aria-pressed='true'] {color:var(--kitty-accent,var(--theme-accent,#964940));background:transparent;box-shadow:inset 0 -2px currentColor;border-radius:0;}
+.app-shell .library-command-bar .library-upload-button,
+.app-shell .album-wall .gallery-command-bar .album-wall__create {background:var(--kitty-accent,var(--theme-accent,#964940));color:#fff;padding-inline:16px;border-radius:10px;}
+.app-shell .album-wall .gallery-command-bar .album-year-picker button {flex-shrink:0;}
+.app-shell .album-wall .gallery-command-bar .album-year-picker strong {font:600 16px/1.3 sans-serif;}
+.app-shell .album-wall .gallery-command-bar .album-year-picker span {font-size:11px;}
+.page-tools-more {position:relative;flex-shrink:0;}
+.app-shell .page-tools-more > summary {display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 8px;list-style:none;font-size:13px;cursor:pointer;white-space:nowrap;}
+.page-tools-more > summary::-webkit-details-marker {display:none;}
+.page-tools-more > summary::after {content:'⌄';font-size:12px;}
+.page-tools-more[open] > summary::after {content:'⌃';}
+.app-shell .page-tools-more__panel {position:absolute;top:calc(100% + 6px);right:0;width:min(340px,calc(100vw - 40px));box-sizing:border-box;max-height:min(420px,65dvh);overflow:auto;padding:18px;display:grid;gap:12px;border:1px solid var(--kitty-border,#e4ddd5);border-radius:16px;background:var(--kitty-surface,#fffaf5);color:var(--kitty-ink,#514b43);box-shadow:0 16px 48px #30202020;font-size:13px;}
+.page-tools-more__panel p {margin:0;line-height:1.6;}
+.page-tools-more__panel .library-upload-history {width:auto;max-height:240px;}
+.page-tools-more__panel select {width:100%;max-width:100%;}
+.app-shell .library-command-bar button:hover,
+.app-shell .page-tools-more > summary:hover {background-color:#ffffff90;}
+.app-shell .library-command-bar button:focus-visible,
+.app-shell .page-tools-more > summary:focus-visible {outline:2px solid var(--kitty-accent,#964940);outline-offset:2px;}
+@media(max-width:850px) {
+  .app-shell .library-command-bar,.app-shell .album-wall .gallery-command-bar {flex-wrap:wrap;gap:4px 8px;}
+  .app-shell .album-wall .gallery-command-bar {padding-inline:12px;}
+  .app-shell .library-command-bar h1,.app-shell .album-wall .gallery-command-bar h1 {font-size:22px;}
+  .app-shell .library-command-bar .filter-group {order:3;flex-basis:100%;}
+  .app-shell .library-command-bar .library-upload-button {margin-left:auto;}
+  .app-shell .album-wall .gallery-command-bar .album-wall__identity {flex:1;}
+  .app-shell .album-wall .gallery-command-bar .album-wall__toolbar {order:3;flex-basis:100%;}
+}
+.app-shell .photo-uploader--compact {padding:12px 16px!important;margin-block:12px;}
+.app-shell .photo-uploader--compact::after {display:none!important;}
+.app-shell .photo-uploader--compact[hidden],.photo-uploader--compact .upload-picker[hidden] {display:none!important;}
+.app-shell .album-wall .album-wall__masthead {
+  min-height:0; padding:10px 24px 6px; gap:12px; align-items:center;
+}
+.app-shell .album-wall .album-wall__identity h1 {
+  margin:0; font:600 20px/1.3 sans-serif; color:var(--ink,inherit);
+}
+.app-shell .album-wall .album-wall__toolbar { padding:0 24px; gap:8px; min-width:0; }
+.app-shell .album-wall .album-year-picker { margin:0; min-height:40px; gap:6px; }
+.app-shell .album-wall .album-year-picker button { min-height:36px; padding:4px 12px; border-radius:10px; }
+.app-shell .album-wall .album-year-picker button strong { font-size:18px; line-height:1.2; }
+.app-shell .album-wall .album-wall__toolbar > button,
+.app-shell .album-wall .album-wall-theme-control > button { min-height:36px; padding:6px 12px; font-size:12px; white-space:nowrap; border-radius:10px; }
+.app-shell .album-wall button.album-wall__create { background:var(--kitty-accent,var(--theme-accent,#964940)); color:white; flex-shrink:0; }
+.app-shell .album-wall .album-corridor__months { margin:0 24px; padding:4px 0 6px; gap:4px; }
+.app-shell .album-wall .album-corridor__months button { min-height:32px; min-width:36px; padding:4px 8px; font-size:11px; border-radius:8px; box-shadow:none; }
+.app-shell .album-wall .story-anniversary-note p { font-size:11px; margin:0; }
+.app-shell .album-wall .album-wall__account { min-height:32px; padding:6px 10px; font-size:11px; }
+@media(max-width:700px) {
+  .app-shell .album-wall .album-wall__masthead {padding:6px 12px;gap:8px;}
+  .app-shell .album-wall .album-wall__toolbar {padding-inline:12px;gap:6px;}
+  .app-shell .album-wall .album-corridor__months {margin-inline:12px;}
+  .app-shell .album-wall .album-year-picker button {padding-inline:8px;}
+  .app-shell .album-wall .album-wall__toolbar > button,
+  .app-shell .album-wall .album-wall-theme-control > button {min-height:44px;padding-inline:10px;}
+  .app-shell .album-wall .album-corridor__months button {min-height:44px;min-width:40px;}
+}

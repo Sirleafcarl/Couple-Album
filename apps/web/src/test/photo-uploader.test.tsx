@@ -24,6 +24,28 @@ afterEach(() => {
 });
 
 describe('PhotoUploader', () => {
+  it('hides completed album uploads in compact mode without hiding failures', async () => {
+    uploadPhoto.mockResolvedValueOnce({ photoId: 'saved' }).mockRejectedValueOnce(new Error('offline'));
+    addAlbumPhotos.mockResolvedValue({ ok: true });
+    const input = createRef<HTMLInputElement>();
+    const browser = userEvent.setup();
+    const { container } = render(<PhotoUploader compact fileInputRef={input} albumId="album" onUploaded={vi.fn()} />);
+    await browser.upload(input.current!, new File(['a'], 'done.jpg', { type: 'image/jpeg' }));
+    await waitFor(() => expect(addAlbumPhotos).toHaveBeenCalledWith('album', ['saved']));
+    await waitFor(() => expect(screen.queryByText('已加入相册')).not.toBeInTheDocument());
+    expect(container.querySelector('.photo-uploader')).toHaveAttribute('hidden');
+    await browser.upload(input.current!, new File(['b'], 'failed.jpg', { type: 'image/jpeg' }));
+    expect(await screen.findByText('failed.jpg 上传失败')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '重试上传' })).toBeInTheDocument();
+  });
+  it('supports a direct picker without a second upload introduction', () => {
+    const input = createRef<HTMLInputElement>();
+    render(<PhotoUploader compact fileInputRef={input} albumId="album" onUploaded={() => undefined} />);
+    expect(screen.queryByText('从本地上传到相册')).not.toBeInTheDocument();
+    expect(input.current).toHaveAttribute('type', 'file');
+    expect(input.current).toHaveAttribute('multiple');
+    expect(input.current).not.toHaveAttribute('capture');
+  });
   it('retries membership without uploading the saved original again', async () => {
     uploadPhoto.mockResolvedValue({ photoId: 'saved-photo', status: 'processing' });
     addAlbumPhotos.mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce({ ok: true });
@@ -116,3 +138,4 @@ describe('PhotoUploader', () => {
     expect(screen.queryByText('cancel.jpg')).not.toBeInTheDocument();
   });
 });
+import { createRef } from 'react';

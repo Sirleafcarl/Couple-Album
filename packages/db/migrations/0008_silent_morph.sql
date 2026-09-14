@@ -1,0 +1,2 @@
+ALTER TABLE "photos" ADD COLUMN "purge_started_at" timestamp with time zone;--> statement-breakpoint
+CREATE INDEX "photos_trash_expiry_index" ON "photos" USING btree ("deleted_at") WHERE "photos"."deleted_at" is not null;

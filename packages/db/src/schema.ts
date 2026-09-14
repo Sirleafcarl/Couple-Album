@@ -67,6 +67,7 @@ export const photos = pgTable('photos', {
   capturedAt: timestamp('captured_at', { withTimezone: true }),
   status: photoStatus('status').notNull().default('processing'),
   failureCode: text('failure_code'),
+  purgeStartedAt: timestamp('purge_started_at', { withTimezone: true }),
   sortAt: timestamp('sort_at', { withTimezone: true }).notNull().defaultNow(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
@@ -86,6 +87,7 @@ export const photos = pgTable('photos', {
     table.id.desc(),
   ),
   index('photos_owner_hash_index').on(table.ownerId, table.contentHash),
+  index('photos_trash_expiry_index').on(table.deletedAt).where(sql`${table.deletedAt} is not null`),
 ]);
 
 export const uploads = pgTable('uploads', {
@@ -121,6 +123,8 @@ export const jobs = pgTable('jobs', {
   index('jobs_status_next_run_index').on(table.status, table.nextRunAt),
 ]);
 
+// Retired enum values remain for database compatibility only; repository reads normalize them.
+// New settings accept only AlbumThemeIdSchema values.
 export const albumThemeId = pgEnum('album_theme_id', [
   'secret-garden',
   'love-letters',
@@ -136,6 +140,9 @@ export const albumThemeId = pgEnum('album_theme_id', [
   'photo-exhibition',
   'heart-track',
   'sky-letters',
+  'kitty-dream',
+  'kitty-gallery',
+  'fairytale-castle',
 ]);
 
 export const albums = pgTable('albums', {

@@ -151,7 +151,7 @@ describe('useAlbumWallData', () => {
     let failure: unknown;
     await act(async () => {
       try {
-        await result.current.setTheme('date-adventure');
+        await result.current.setTheme('clear-specimen');
       } catch (error) {
         failure = error;
       }
@@ -166,7 +166,7 @@ describe('useAlbumWallData', () => {
       'ALBUM_THEME_VERSION_CONFLICT',
       409,
       { error: 'ALBUM_THEME_VERSION_CONFLICT', current: {
-        year: 2026, themeId: 'date-adventure', version: 4,
+        year: 2026, themeId: 'clear-specimen', version: 4,
       } },
     ));
     const { result } = renderHook(() => useAlbumWallData());
@@ -181,6 +181,6 @@ describe('useAlbumWallData', () => {
       }
     });
     expect(failure).toBeInstanceOf(AlbumApiError);
-    expect(result.current.selected).toMatchObject({ themeId: 'date-adventure', themeVersion: 4 });
+    expect(result.current.selected).toMatchObject({ themeId: 'clear-specimen', themeVersion: 4 });
   });
 });

@@ -85,6 +85,9 @@ export function addAlbumPhotos(id: string, photoIds: string[]) {
 export function removeAlbumPhoto(id: string, photoId: string, version: number) {
   return requestJson(`/api/albums/${encodeURIComponent(id)}/photos/${encodeURIComponent(photoId)}`, okSchema, { method: 'DELETE', body: { version } });
 }
+export function removeAlbumPhotos(id: string, photoIds: string[], version: number) {
+  return requestJson(`/api/albums/${encodeURIComponent(id)}/photos`, okSchema, { method: 'DELETE', body: { photoIds, version } });
+}
 export function setAlbumLayout(id: string, layout: AlbumLayout, version: number) {
   return requestJson(`/api/albums/${encodeURIComponent(id)}/layout`, okSchema, { method: 'PUT', body: { layout, version } });
 }

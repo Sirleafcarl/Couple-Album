@@ -2,7 +2,7 @@ import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { UploadsPage } from '../pages/uploads-page.js';
+import { UploadHistory as UploadsPage } from '../components/library-upload-tools.js';
 
 const getUploads = vi.fn();
 vi.mock('../api/albums.js', () => ({ getAlbums: async () => ({ years: [] }) }));

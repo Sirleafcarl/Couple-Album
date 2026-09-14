@@ -1,0 +1,82 @@
+import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
+import { E2E_WEB_ORIGIN, requireE2eCredentials } from './environment.js';
+
+for (const width of [1440, 820, 390]) {
+  test(`photo lifecycle preserves explicit album removals after trash recovery at ${width}px`, async ({ page }) => {
+    test.setTimeout(100_000);
+    const credentials = requireE2eCredentials();
+    const errors: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/login');
+    await page.getByLabel('邮箱').fill(credentials.firstEmail);
+    await page.getByLabel('密码').fill(credentials.firstPassword);
+    await page.getByRole('button', { name: '登录', exact: true }).click();
+    await expect(page).toHaveURL(/\/$/);
+    const bytes = await readFile('packages/media/test/fixtures/landscape.jpg');
+    const names = [0, 1].map(n => `album-lifecycle-${width}-${n}.jpg`);
+    await page.goto('/library');
+    const chooser = page.waitForEvent('filechooser');
+    await page.getByRole('button', { name: '上传照片', exact: true }).click();
+    await (await chooser).setFiles(names.map(name => ({ name, mimeType: 'image/jpeg', buffer: Buffer.concat([bytes, Buffer.from(name)]) })));
+    for (const name of names) await expect(page.locator('.photo-card').filter({ hasText: name }).locator('img')).toBeVisible({ timeout: 25_000 });
+    const listed = await (await page.request.get('/api/photos?owner=me&limit=100')).json();
+    const photos = listed.items.filter((item: { originalFilename: string }) => names.includes(item.originalFilename)) as Array<{ id: string; originalFilename: string; media: { original: string } }>;
+    expect(photos).toHaveLength(2);
+    const ids = photos.map(photo => photo.id);
+    const headers = { origin: E2E_WEB_ORIGIN };
+    // Create the two empty albums as fixtures; all main photo actions use the UI.
+    const albumIds: string[] = [];
+    for (const title of ['Current', 'Keep']) {
+      const response = await page.request.post('/api/albums', { headers, data: { title: `${title}-${width}`, occurredOn: '2026-09-10' } });
+      expect(response.ok()).toBe(true);
+      albumIds.push((await response.json()).id);
+    }
+    expect((await page.request.post(`/api/albums/${albumIds[1]}/photos`, { headers, data: { photoIds: ids } })).ok()).toBe(true);
+    await page.goto(`/albums/${albumIds[0]}`);
+    await page.getByRole('button', { name: '从照片库挑选', exact: true }).click();
+    const picker = page.getByRole('dialog', { name: '从照片库挑选' });
+    for (const name of names) await picker.getByRole('checkbox', { name: `选择 ${name}`, exact: true }).check();
+    await picker.getByRole('button', { name: '加入相册（2）' }).click();
+    await expect(picker).not.toBeVisible();
+    for (const name of names) await expect(page.getByRole('button', { name: `查看照片：${name}` })).toBeVisible();
+    await page.getByRole('button', { name: `查看照片：${names[0]}` }).click();
+    const viewer = page.getByRole('dialog', { name: '照片查看器' });
+    await expect(viewer.getByRole('img')).toBeVisible();
+    await expect(viewer.getByText(/\d \/ 2/)).toBeVisible();
+    await viewer.getByRole('button', { name: '放大', exact: true }).click();
+    await expect(viewer.getByRole('button', { name: '复位缩放' })).toHaveText('150%');
+    await viewer.getByRole('button', { name: '关闭看图' }).click();
+    await page.getByRole('button', { name: '整理', exact: true }).click();
+    await page.getByRole('button', { name: '全选已加载' }).click();
+    await page.getByRole('button', { name: '移除所选（2）' }).click();
+    const confirmation = page.getByRole('dialog', { name: '从相册移除照片' });
+    await confirmation.getByRole('button', { name: '确认移除' }).click();
+    await expect(confirmation).not.toBeVisible();
+    await expect(page.getByText('这一页，等我们慢慢写')).toBeVisible();
+    const album = async (index: number) => (await page.request.get(`/api/albums/${albumIds[index]}`)).json();
+    expect((await album(0)).total).toBe(0);
+    expect((await album(1)).total).toBe(2);
+    for (const photo of photos) expect((await page.request.get(photo.media.original)).status()).toBe(200);
+    await page.goto('/library');
+    const target = photos[0]!;
+    const card = page.locator('.photo-card').filter({ hasText: target.originalFilename });
+    await card.getByRole('button', { name: `移入回收站 ${target.originalFilename}` }).click();
+    const trashDialog = page.getByRole('dialog', { name: '删除照片' });
+    await trashDialog.getByRole('button', { name: '继续删除' }).click();
+    await trashDialog.getByRole('button', { name: '确认移入回收站' }).click();
+    await expect(card).toHaveCount(0);
+    expect((await page.request.get(target.media.original)).status()).toBe(404);
+    expect((await album(1)).total).toBe(1);
+    await page.goto('/trash');
+    const trashed = page.locator('.trash-photo').filter({ hasText: target.originalFilename });
+    await trashed.getByRole('button', { name: `恢复 ${target.originalFilename}` }).click();
+    await expect(trashed).toHaveCount(0);
+    expect((await page.request.get(target.media.original)).status()).toBe(200);
+    expect((await album(0)).total).toBe(0);
+    expect((await album(1)).items.map((item: { id: string }) => item.id).sort()).toEqual([...ids].sort());
+    expect(await page.locator('body').evaluate(body => body.scrollWidth)).toBeLessThanOrEqual(width);
+    expect(errors).toEqual([]);
+  });
+}

@@ -55,10 +55,13 @@ describe('album wall home page', () => {
 
     expect(await screen.findByText('设置纪念日后，在这里记录我们的时间')).toBeInTheDocument();
     expect(await screen.findByRole('region', { name: '2026 年相册廊' })).toBeInTheDocument();
+    const compactHeader = screen.getByRole('heading', { name: '我们的故事', level: 1 }).closest('header');
+    expect(compactHeader).toContainElement(screen.getByRole('button', { name: '查看 2025 年' }));
+    expect(compactHeader).toContainElement(screen.getByRole('button', { name: '新建相册' }));
     expect(screen.getByText('真实的春日')).toBeInTheDocument();
     expect(screen.queryByText('雨天的咖啡馆')).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: '照片库' })).toHaveAttribute('href', '/library');
-    expect(screen.getByRole('link', { name: '上传中心' })).toHaveAttribute('href', '/uploads');
+    expect(screen.getByRole('link', { name: '回收站' })).toHaveAttribute('href', '/trash');
     expect(screen.getByText('音乐功能尚未接入')).toBeInTheDocument();
 
     await browser.click(screen.getByRole('button', { name: '查看 2025 年' }));

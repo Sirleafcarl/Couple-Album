@@ -29,6 +29,28 @@ afterEach(() => {
 });
 
 describe('album corridor', () => {
+  it('omits duplicate heading controls when the page supplies a compact toolbar', () => {
+    render(<AlbumCorridor compactHeader autoPlay={false} onCreate={vi.fn()} onEdit={vi.fn()} year={year} />);
+    expect(screen.queryByRole('button', { name: '新建相册' })).not.toBeInTheDocument();
+    expect(screen.getByRole('region', { name: '2026 年相册廊' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '3月' })).toBeInTheDocument();
+  });
+  it('pauses themed effects while editor, preview or hidden document is active', () => {
+    const props = { onCreate: vi.fn(), onEdit: vi.fn(), year: { ...year, themeId: 'cloud-candy' as const } };
+    const { container, rerender } = render(<AlbumCorridor {...props} autoPlay />);
+    const stage = container.querySelector('.album-corridor__stage')!;
+    expect(stage).toHaveAttribute('data-motion', 'running');
+    fireEvent.click(screen.getByRole('button', { name: /打开相册/ }));
+    expect(stage).toHaveAttribute('data-motion', 'paused');
+    fireEvent.click(screen.getByRole('button', { name: '关闭相册预览' }));
+    expect(stage).toHaveAttribute('data-motion', 'running');
+    rerender(<AlbumCorridor {...props} autoPlay={false} />);
+    expect(stage).toHaveAttribute('data-motion', 'paused');
+    rerender(<AlbumCorridor {...props} autoPlay />);
+    vi.spyOn(document, 'hidden', 'get').mockReturnValue(true);
+    fireEvent(document, new Event('visibilitychange'));
+    expect(stage).toHaveAttribute('data-motion', 'paused');
+  });
   it('renders albums on a controllable year timeline', async () => {
     const browser = userEvent.setup();
     const scrollTo = vi.fn();

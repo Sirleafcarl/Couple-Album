@@ -46,9 +46,9 @@ describe('story spine navigation', () => {
     render(<MemoryRouter><AppShell><h1>内容</h1></AppShell></MemoryRouter>);
     await user.click(screen.getByRole('button', { name: '打开导航' }));
     const drawer = screen.getByRole('dialog', { name: '主要导航' });
-    await user.click(within(drawer).getByRole('link', { name: '上传中心' }));
+    await user.click(within(drawer).getByRole('link', { name: '回收站' }));
     expect(drawer).not.toHaveAttribute('open');
     expect(screen.getByRole('heading', { name: '内容' })).toBeInTheDocument();
-    expect(within(screen.getByRole('navigation', { name: '主要导航' })).getByRole('link', { name: '上传中心' })).toHaveAttribute('aria-current', 'page');
+    expect(within(screen.getByRole('navigation', { name: '主要导航' })).getByRole('link', { name: '回收站' })).toHaveAttribute('aria-current', 'page');
   });
 });

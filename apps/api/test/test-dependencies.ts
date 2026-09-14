@@ -75,6 +75,7 @@ export function createUnusedDependencies(): AppDependencies {
       async get() { return null; },
       async add() { return { kind: 'not-found' }; },
       async remove() { return { kind: 'not-found' }; },
+      async removeMany() { return { kind: 'not-found' }; },
       async move() { return { kind: 'not-found' }; },
       async setLayout() { return { kind: 'not-found' }; },
     },

@@ -1,0 +1,90 @@
+name: love-gallery
+
+x-backend: &backend
+  image: love-gallery-backend:${GALLERY_IMAGE_TAG:-local}
+  build:
+    context: .
+    dockerfile: docker/production/Dockerfile
+    target: backend
+  init: true
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "3"
+
+x-environment: &environment
+  DATABASE_URL: postgres://memory:${POSTGRES_PASSWORD:?Set a random hex POSTGRES_PASSWORD in the external env file}@postgres:5432/memory
+  DATA_ROOT: /data
+  APP_ORIGIN: ${APP_ORIGIN:?Set APP_ORIGIN to the LAN application URL}
+  API_HOST: 0.0.0.0
+  API_PORT: "23001"
+  SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+  IMAGE_WORKER_CONCURRENCY: "1"
+
+services:
+  postgres:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_DB: memory
+      POSTGRES_USER: memory
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - ${GALLERY_ROOT:?Set GALLERY_ROOT}/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U memory -d memory"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options: { max-size: 10m, max-file: "3" }
+
+  migrate:
+    <<: *backend
+    environment: *environment
+    command: [node, packages/db/dist/migrate.js]
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: "no"
+
+  api:
+    <<: *backend
+    environment: *environment
+    command: [node, apps/api/dist/server.js]
+    volumes:
+      - ${GALLERY_ROOT:?Set GALLERY_ROOT}/media:/data
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:23001/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  worker:
+    <<: *backend
+    environment: *environment
+    command: [node, apps/worker/dist/main.js]
+    volumes:
+      - ${GALLERY_ROOT:?Set GALLERY_ROOT}/media:/data
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    restart: unless-stopped
+
+  web:
+    image: love-gallery-web:${GALLERY_IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: docker/production/Dockerfile
+      target: web
+    ports:
+      - "${GALLERY_BIND_IP:-0.0.0.0}:${GALLERY_PORT:-8088}:80"
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options: { max-size: 10m, max-file: "3" }

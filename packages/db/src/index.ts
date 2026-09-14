@@ -5,6 +5,7 @@ export * from './album-year-settings-repository.js';
 export * from './ingestion-repository.js';
 export * from './job-repository.js';
 export * from './photo-repository.js';
+export * from './photo-trash-repository.js';
 export * from './photo-processing-repository.js';
 export * from './schema.js';
 export * from './session-repository.js';

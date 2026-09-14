@@ -10,7 +10,7 @@ export function columnCountForWidth(width: number): number {
   return 1;
 }
 
-export function VirtualPhotoGrid({ photos }: { photos: PhotoSummary[] }) {
+export function VirtualPhotoGrid({ photos, ownerId, onDelete }: { photos: PhotoSummary[]; ownerId?: string | undefined; onDelete?: ((photo: PhotoSummary) => void) | undefined }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const canVirtualize = typeof ResizeObserver !== 'undefined';
   const [columns, setColumns] = useState(() => columnCountForWidth(
@@ -41,7 +41,7 @@ export function VirtualPhotoGrid({ photos }: { photos: PhotoSummary[] }) {
   }, [canVirtualize]);
 
   if (!canVirtualize) {
-    return <div className="photo-grid-fallback">{photos.map((photo) => <PhotoCard key={photo.id} photo={photo} />)}</div>;
+    return <div className="photo-grid-fallback">{photos.map((photo) => <PhotoCard key={photo.id} photo={photo} onDelete={photo.owner.id === ownerId ? onDelete : undefined} />)}</div>;
   }
 
   return (
@@ -60,7 +60,7 @@ export function VirtualPhotoGrid({ photos }: { photos: PhotoSummary[] }) {
                 transform: `translateY(${row.start}px)`,
               }}
             >
-              {rowPhotos.map((photo) => <PhotoCard key={photo.id} photo={photo} />)}
+              {rowPhotos.map((photo) => <PhotoCard key={photo.id} photo={photo} onDelete={photo.owner.id === ownerId ? onDelete : undefined} />)}
             </div>
           ) : null;
         })}

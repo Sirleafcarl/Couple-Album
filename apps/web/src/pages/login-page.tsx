@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/auth-provider.js';
+import { useRoomTheme } from '../themes/room-theme.js';
 
 export function LoginPage() {
+  const { roomTheme } = useRoomTheme();
   const { loading, signIn, user } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -29,8 +31,9 @@ export function LoginPage() {
   }
 
   return (
-    <main className="login-layout">
+    <main className="login-layout" data-kitty-theme={roomTheme ?? undefined}>
       <section className="login-card" aria-labelledby="login-title">
+        {roomTheme ? <img className="kitty-login-character" src={`/themes/${roomTheme}/character.webp`} alt="" /> : null}
         <p className="eyebrow">OUR MEMORY</p>
         <h1 id="login-title">登录</h1>
         <p className="login-intro">回到只属于你们两个人的相册。</p>

@@ -1,0 +1,22 @@
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, expect, it, vi } from 'vitest';
+import { AlbumPhotoPicker } from '../components/album-photo-picker.js';
+import { getPhotos } from '../api/photos.js';
+import { addAlbumPhotos } from '../api/albums.js';
+vi.mock('../api/photos.js', () => ({ getPhotos: vi.fn() }));
+vi.mock('../api/albums.js', () => ({ addAlbumPhotos: vi.fn().mockResolvedValue({ ok: true }) }));
+afterEach(cleanup);
+it('selects at most 100 loaded photos, clears selection, and sends only selected ids', async () => {
+  const items = Array.from({ length: 105 }, (_, n) => ({ id: `p${n}`, originalFilename: `${n}.jpg`, owner: { id: 'me', displayName: '我们' }, status: 'ready' as const, width: 1, height: 1, capturedAt: null, sortAt: '2026-09-10T00:00:00Z', failureCode: null, media: { original: '/api/photos/original', preview: null, thumbnail: null } }));
+  vi.mocked(getPhotos).mockResolvedValue({ items, nextCursor: 'more' });
+  render(<AlbumPhotoPicker albumId="album" onAdded={vi.fn()} />);
+  await screen.findByLabelText('选择 104.jpg');
+  fireEvent.click(screen.getByRole('button', { name: '全选已加载' }));
+  expect(screen.getByText('已选 100 / 100 张')).toBeInTheDocument();
+  expect(screen.getByLabelText('选择 104.jpg')).toBeDisabled();
+  fireEvent.click(screen.getByRole('button', { name: '取消选择' }));
+  expect(screen.getByLabelText('选择 104.jpg')).not.toBeDisabled();
+  fireEvent.click(screen.getByLabelText('选择 104.jpg'));
+  fireEvent.click(screen.getByRole('button', { name: '加入相册（1）' }));
+  await waitFor(() => expect(addAlbumPhotos).toHaveBeenCalledWith('album', ['p104']));
+});

@@ -1,0 +1,8 @@
+.photo-selection-bar, .album-batch-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
+.album-batch-tools { margin: 12px 0 20px; }
+.photo-selection-bar { margin: 8px 0; }
+.photo-selection-bar small { opacity: .75; }
+.photo-selection-bar button, .album-batch-tools > button { min-height: 44px; padding: 8px 12px; font-size: 14px; }
+.album-photo-select { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 4px 12px; cursor: pointer; }
+.album-photo-select input { width: 20px; height: 20px; accent-color: var(--accent, #ad4168); }
+.wall-photo:has(.album-photo-select input:checked) { outline: 2px solid var(--accent, #ad4168); outline-offset: 3px; }

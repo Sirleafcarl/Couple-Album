@@ -1,6 +1,7 @@
 import { and, asc, count, eq, inArray, isNull, sql } from 'drizzle-orm';
 import type { Database } from './client.js';
 import type { PhotoListItem } from './photo-repository.js';
+import { lockPhoto } from './photo-trash-repository.js';
 import { albumPhotos, albums, photos, users } from './schema.js';
 
 type Layout = 'story' | 'garden' | 'film';
@@ -11,6 +12,7 @@ export type AlbumPhotoRepository = {
   } | null>;
   add(albumId: string, photoIds: string[]): Promise<Result>;
   remove(albumId: string, photoId: string, version: number): Promise<Result>;
+  removeMany(albumId: string, photoIds: string[], version: number): Promise<Result>;
   setLayout(albumId: string, layout: Layout, version: number): Promise<Result>;
   move(albumId: string, photoId: string, beforePhotoId: string | null, version: number): Promise<Result>;
 };
@@ -24,8 +26,10 @@ export function createAlbumPhotoRepository(db: Database): AlbumPhotoRepository {
   async function change(
     albumId: string, version: number | undefined,
     action: (tx: Transaction, album: typeof albums.$inferSelect) => Promise<Result>,
+    photoIds: string[] = [],
   ): Promise<Result> {
     return db.transaction(async tx => {
+      for (const id of [...new Set(photoIds)].sort()) await lockPhoto(tx, id);
       const [album] = await tx.select().from(albums)
         .where(and(eq(albums.id, albumId), isNull(albums.deletedAt))).for('update');
       if (!album) return { kind: 'not-found' };
@@ -73,13 +77,24 @@ export function createAlbumPhotoRepository(db: Database): AlbumPhotoRepository {
           albumId, photoId, position: last!.value + index + 1, attachedAt, sortAt: captured.get(photoId) ?? attachedAt,
         }))).onConflictDoNothing();
         return { kind: 'updated' };
-      });
+      }, photoIds);
     },
     remove(albumId, photoId, version) {
       return change(albumId, version, async tx => {
         await tx.delete(albumPhotos).where(and(eq(albumPhotos.albumId, albumId), eq(albumPhotos.photoId, photoId)));
         return { kind: 'updated' };
       });
+    },
+    removeMany(albumId, photoIds, version) {
+      const ids = [...new Set(photoIds)];
+      return change(albumId, version, async tx => {
+        const members = await tx.select({ id: albumPhotos.photoId }).from(albumPhotos)
+          .innerJoin(photos, eq(photos.id, albumPhotos.photoId))
+          .where(and(activeMembership(albumId), inArray(albumPhotos.photoId, ids)));
+        if (!ids.length || members.length !== ids.length) return { kind: 'photo-not-found' };
+        await tx.delete(albumPhotos).where(and(eq(albumPhotos.albumId, albumId), inArray(albumPhotos.photoId, ids)));
+        return { kind: 'updated' };
+      }, ids);
     },
     setLayout(albumId, layout, version) {
       return change(albumId, version, async tx => {

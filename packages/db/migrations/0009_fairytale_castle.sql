@@ -1,0 +1,1 @@
+ALTER TYPE "public"."album_theme_id" ADD VALUE 'fairytale-castle';

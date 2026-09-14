@@ -1,15 +1,20 @@
-import type { PhotoListResponse } from '@memory/contracts/photos';
-import { useEffect, useState } from 'react';
+import type { PhotoListResponse, PhotoSummary } from '@memory/contracts/photos';
+import { useEffect, useRef, useState } from 'react';
 import { getPhotos } from '../api/photos.js';
 import { useAuth } from '../auth/auth-provider.js';
 import { AppShell } from '../components/app-shell.js';
 import { VirtualPhotoGrid } from '../components/virtual-photo-grid.js';
 import { useVisiblePolling } from '../hooks/use-visible-polling.js';
+import { LibraryUploadTools } from '../components/library-upload-tools.js';
+import { PhotoTrashDialog } from '../components/photo-trash-dialog.js';
+import '../components/photo-library.css';
 
 type Page = { cursor?: string; response: PhotoListResponse };
 
 export function LibraryPage() {
   const { user } = useAuth();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [deleting, setDeleting] = useState<PhotoSummary>();
   const [owner, setOwner] = useState('all');
   const [pages, setPages] = useState<Page[]>([]);
   const [pageIndex, setPageIndex] = useState(0);
@@ -76,19 +81,25 @@ export function LibraryPage() {
   return (
     <AppShell>
       <main className="library-page">
-        <header className="page-heading">
-          <div><p className="eyebrow">每一张，都有它的位置</p><h1>我们的照片</h1></div>
+        <LibraryUploadTools inputRef={inputRef} onUploaded={() => { setOwner('me'); setRevision(value => value + 1); }} toolbar={<>
+          <h1>照片库</h1>
           <div className="filter-group" aria-label="照片所有者筛选">
-            <button onClick={() => chooseOwner('all')} type="button">全部照片</button>
-            <button onClick={() => chooseOwner('me')} type="button">我的照片</button>
-            <button onClick={() => chooseOwner('partner')} type="button">TA 的照片</button>
+            <button aria-label="全部照片" aria-pressed={owner === 'all'} onClick={() => chooseOwner('all')} type="button">全部</button>
+            <button aria-label="我的照片" aria-pressed={owner === 'me'} onClick={() => chooseOwner('me')} type="button">我的</button>
+            <button aria-label="TA 的照片" aria-pressed={owner === 'partner'} onClick={() => chooseOwner('partner')} type="button">TA 的</button>
+            <button className="library-upload-button" type="button" onClick={() => inputRef.current?.click()}>上传照片</button>
           </div>
-        </header>
+        </>} />
 
         {loading && !page ? <p className="page-state">正在整理照片…</p> : null}
         {error ? <section className="page-state"><p>照片暂时没有加载出来</p><button type="button" onClick={() => setRevision((value) => value + 1)}>重新加载</button></section> : null}
         {!loading && !error && page?.response.items.length === 0 ? <p className="page-state">照片库还是空的</p> : null}
-        {page?.response.items.length ? <VirtualPhotoGrid photos={page.response.items} /> : null}
+        {page?.response.items.length ? <VirtualPhotoGrid photos={page.response.items} ownerId={user?.id} onDelete={setDeleting} /> : null}
+        {deleting ? <PhotoTrashDialog photo={deleting} onClose={() => setDeleting(undefined)} onDeleted={() => {
+          setPages(current => current.map(entry => ({ ...entry, response: { ...entry.response, items: entry.response.items.filter(photo => photo.id !== deleting.id) } })));
+          setDeleting(undefined); setRevision(value => value + 1);
+          document.querySelector<HTMLElement>('.library-upload-button')?.focus({ preventScroll: true });
+        }} /> : null}
 
         {page ? (
           <nav className="pagination" aria-label="照片分页">

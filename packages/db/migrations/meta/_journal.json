@@ -50,6 +50,27 @@
       "when": 1788864109493,
       "tag": "0006_jittery_tomas",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1788927491043,
+      "tag": "0007_strange_monster_badoon",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1788944198305,
+      "tag": "0008_silent_morph",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1789355178392,
+      "tag": "0009_fairytale_castle",
+      "breakpoints": true
     }
   ]
 }

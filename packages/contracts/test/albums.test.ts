@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  AlbumThemeIdSchema,
   AlbumListResponseSchema,
   CreateAlbumInputSchema,
   UpdateAlbumInputSchema,
@@ -44,6 +45,8 @@ describe('album contracts', () => {
   });
 
   it('accepts only persisted themes and nullable first-write versions', () => {
+    expect(AlbumThemeIdSchema.safeParse('fairytale-castle').success).toBe(false);
+    expect(UpdateAlbumThemeInputSchema.safeParse({ themeId: 'fairytale-castle', version: null }).success).toBe(false);
     expect(UpdateAlbumThemeInputSchema.parse({
       themeId: 'love-letters',
       version: null,

@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { resolve } from 'node:path';
 import { requireE2eCredentials } from './environment.js';
 
-const ids = ['daylight', 'heart-frequency', 'sacred-joy', 'love-playground', 'blue-holiday', 'cloud-candy', 'tropical-cutout', 'clear-specimen', 'photo-exhibition', 'heart-track', 'sky-letters'];
+const ids = ['sacred-joy', 'cloud-candy', 'clear-specimen', 'sky-letters'];
 test('approved themes render real photo surfaces and persist valid theme settings', async ({ page }, info) => {
   test.setTimeout(120000);
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -27,8 +27,24 @@ test('approved themes render real photo surfaces and persist valid theme setting
     await page.goto('/');
     await expect(page.locator('.album-wall')).toHaveClass(new RegExp(`album-wall--${id}`));
     await expect(page.locator('.modern-album')).toHaveCount(8);
+    const bounds = await page.locator('.modern-album').evaluateAll(nodes => nodes.map(node => {
+      const card = node.getBoundingClientRect();
+      const image = node.querySelector('.modern-album__image')!.getBoundingClientRect();
+      return { width: card.width, imageWidth: image.width, bottom: card.bottom };
+    }));
+    for (const box of bounds) {
+      expect(box.width).toBeLessThanOrEqual(210);
+      expect(box.imageWidth).toBeLessThanOrEqual(222); // Small intentional pop-card rotation.
+      expect(box.bottom).toBeLessThanOrEqual(1024);
+    }
+    await expect(page.locator('.theme-atmosphere')).toBeHidden();
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await expect(page.locator('.album-corridor__stage')).toHaveAttribute('data-motion', 'running');
+    await expect(page.locator('.theme-atmosphere')).toBeVisible();
+    expect(await page.locator('.theme-atmosphere i').first().evaluate(node => getComputedStyle(node).animationName)).not.toBe('none');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await expect.poll(() => page.locator('.modern-album img').first().evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
-    if (id !== 'daylight' && id !== 'photo-exhibition') expect((await page.request.get(`/themes/${id}/scene.webp`)).ok()).toBe(true);
+    expect((await page.request.get(`/themes/${id}/scene.webp`)).ok()).toBe(true);
     for (let i = 0; i < 4; i++) await expect.poll(() => page.locator('.modern-album img').nth(i).evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
     await page.locator('.modern-album img').evaluateAll(images => Promise.all(images.slice(0, 4).map(img => (img as HTMLImageElement).decode())));
     await page.screenshot({ path: info.outputPath(`${id}-desktop.png`) });
@@ -38,6 +54,8 @@ test('approved themes render real photo surfaces and persist valid theme setting
     await page.setViewportSize({ width: 390, height: 844 });
     await expect.poll(async () => { const box = await page.locator('.album-corridor__viewport').boundingBox(); return box!.y + box!.height; }).toBeLessThanOrEqual(844);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+    expect(await page.locator('.modern-album').first().evaluate(node => node.getBoundingClientRect().width)).toBeLessThanOrEqual(150);
+    await page.screenshot({ path: info.outputPath(`${id}-mobile.png`) });
     await page.getByRole('button', { name: '主题', exact: true }).click();
     await expect(page.getByRole('group', { name: '年度主题' })).toBeVisible();
     expect(await page.locator('.theme-choice__text').first().evaluate(node => node.getBoundingClientRect().width)).toBeGreaterThan(100);

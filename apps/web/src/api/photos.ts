@@ -1,6 +1,7 @@
 import {
   PhotoListResponseSchema,
   UploadSummarySchema,
+  TrashListResponseSchema,
   type PhotoListResponse,
   type UploadSummary,
 } from '@memory/contracts/photos';
@@ -19,6 +20,27 @@ export class PhotoApiError extends Error {
   ) {
     super(code);
     this.name = 'PhotoApiError';
+  }
+}
+
+export async function getTrash(cursor?: string) {
+  const query = new URLSearchParams({ limit: '40' });
+  if (cursor) query.set('cursor', cursor);
+  const response = await fetch(`/api/trash?${query}`, { credentials: 'include' });
+  if (!response.ok) throw new Error('TRASH_LIST_FAILED');
+  return TrashListResponseSchema.parse(await response.json());
+}
+
+export async function trashPhoto(id: string) {
+  const response = await fetch(`/api/photos/${id}`, { method: 'DELETE', credentials: 'include' });
+  if (!response.ok) throw new Error('PHOTO_DELETE_FAILED');
+}
+
+export async function restorePhoto(id: string) {
+  const response = await fetch(`/api/trash/${id}/restore`, { method: 'POST', credentials: 'include' });
+  if (!response.ok) {
+    const body = await response.json() as { error?: string };
+    throw new PhotoApiError(body.error ?? 'RESTORE_FAILED', response.status, null);
   }
 }
 

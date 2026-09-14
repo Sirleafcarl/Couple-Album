@@ -31,6 +31,14 @@ beforeEach(resetDatabase);
 afterAll(async () => { await resetDatabase(); await database.close(); });
 
 describe('album year settings repository', () => {
+  it.each(['fairytale-castle', 'daylight', 'heart-frequency', 'photo-exhibition', 'heart-track', 'love-playground', 'blue-holiday', 'tropical-cutout', 'date-adventure'] as const)('falls back for legacy %s without losing its version', async (themeId) => {
+    const userId = await createUser();
+    await database.db.insert(albumYearSettings).values({ year: 2026, themeId, updatedBy: userId });
+    const setting = { year: 2026, themeId: 'secret-garden', version: 1 };
+    await expect(repository.list()).resolves.toEqual([setting]);
+    await expect(repository.set({ year: 2026, themeId: 'clear-specimen', version: null, updatedBy: userId })).resolves.toEqual({ kind: 'conflict', setting });
+    await expect(repository.set({ year: 2026, themeId: 'clear-specimen', version: 1, updatedBy: userId })).resolves.toEqual({ kind: 'updated', setting: { ...setting, themeId: 'clear-specimen', version: 2 } });
+  });
   it('creates, updates, lists, and rejects stale theme versions', async () => {
     const userId = await createUser();
     await expect(repository.set({
@@ -44,7 +52,7 @@ describe('album year settings repository', () => {
       kind: 'updated', setting: { year: 2026, themeId: 'love-letters', version: 2 },
     });
     await expect(repository.set({
-      year: 2026, themeId: 'date-adventure', version: 1, updatedBy: userId,
+      year: 2026, themeId: 'clear-specimen', version: 1, updatedBy: userId,
     })).resolves.toEqual({
       kind: 'conflict', setting: { year: 2026, themeId: 'love-letters', version: 2 },
     });

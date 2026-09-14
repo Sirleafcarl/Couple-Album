@@ -10,7 +10,7 @@ export interface AlbumWallTheme {
   scene: string;
   className: string;
   modern?: boolean;
-  layout?: 'editorial' | 'collage' | 'orbit' | 'pop' | 'gallery' | 'hanging' | 'track' | 'arc';
+  layout?: 'collage' | 'orbit' | 'gallery' | 'hanging' | 'arc';
   background?: string;
   accent?: string;
   description?: string;

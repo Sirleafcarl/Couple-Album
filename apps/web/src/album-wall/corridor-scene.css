@@ -4,7 +4,6 @@
   background-attachment: fixed;
 }
 .story-content > .album-wall--love-letters { background-image: linear-gradient(#fcf6eadd, #fcf6ea44 55%, transparent), url('/themes/love-letters/scene.webp'); }
-.story-content > .album-wall--date-adventure { background-image: linear-gradient(#fcf6eadd, #fcf6ea44 55%, transparent), url('/themes/date-adventure/scene.webp'); }
 .app-shell .album-wall__masthead { grid-template-columns: minmax(160px, 1fr) auto auto; min-height: 100px; padding: 24px 36px 12px; background: transparent; border: 0; box-shadow: none; backdrop-filter: none; gap: 20px; }
 .app-shell .album-wall__identity strong { font-size: 24px; font-weight: 400; }
 .app-shell .album-wall__identity > span { display: none; }

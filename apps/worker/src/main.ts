@@ -4,11 +4,13 @@ import {
   createDatabase,
   createJobRepository,
   createPhotoProcessingRepository,
+  createPhotoTrashRepository,
 } from '@memory/db';
 import { createLocalMediaStorage } from '@memory/media';
 import { parseWorkerConfig } from './config.js';
 import { processPhotoJob } from './process-photo-job.js';
 import { runWorker } from './worker.js';
+import { removeTrashedPhotoFiles } from './photo-trash-cleanup.js';
 
 async function main(): Promise<void> {
   const config = parseWorkerConfig(process.env);
@@ -21,7 +23,17 @@ async function main(): Promise<void> {
   await storage.ensureLayout();
 
   const jobs = createJobRepository(database.db);
-  const processing = createPhotoProcessingRepository(database.db);
+  const trash = createPhotoTrashRepository(database.db);
+  let cleanup: Promise<unknown> | undefined;
+  const cleanTrash = () => {
+    if (cleanup) return;
+    cleanup = trash.purgeExpired(new Date(), photo => removeTrashedPhotoFiles(photo, storage))
+      .catch(() => { console.error('Trash cleanup failed; retained records will be retried.'); })
+      .finally(() => { cleanup = undefined; });
+  };
+  const cleanupTimer = setInterval(cleanTrash, 60_000);
+  cleanupTimer.unref();
+  cleanTrash();
   const shutdown = new AbortController();
   const requestShutdown = () => shutdown.abort();
   process.once('SIGINT', requestShutdown);
@@ -35,9 +47,12 @@ async function main(): Promise<void> {
       staleJobMs: config.staleJobMs,
       signal: shutdown.signal,
       jobs,
-      processJob: (job) => processPhotoJob(job, { processing, storage }),
+      processJob: (job) => trash.runProcessing(job.payload.photoId, job.id, transaction =>
+        processPhotoJob(job, { processing: createPhotoProcessingRepository(transaction), storage })),
     });
   } finally {
+    clearInterval(cleanupTimer);
+    await cleanup;
     process.removeListener('SIGINT', requestShutdown);
     process.removeListener('SIGTERM', requestShutdown);
     await database.close();

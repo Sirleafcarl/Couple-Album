@@ -17,7 +17,7 @@ describe('modern theme geometry and contracts', () => {
           result.cards.forEach((card, index) => {
             expect(card.x - card.width / 2).toBeGreaterThanOrEqual(0);
             expect(card.x + card.width / 2).toBeLessThanOrEqual(result.width);
-            expect(card.y + card.width * 1.25 + 65).toBeLessThanOrEqual(height);
+            expect(card.y + card.height).toBeLessThanOrEqual(height);
             if (index) expect(card.x - result.cards[index - 1]!.x).toBeGreaterThan(card.width);
           });
         }

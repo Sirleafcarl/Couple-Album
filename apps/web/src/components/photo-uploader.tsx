@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type Ref } from 'react';
 import { uploadPhoto } from '../api/photos.js';
 import { addAlbumPhotos } from '../api/albums.js';
 import { DuplicatePhotoResponseSchema } from '@memory/contracts/photos';
@@ -23,7 +23,7 @@ function errorCode(error: unknown): string | undefined {
   return undefined;
 }
 
-export function PhotoUploader({ onUploaded, albumId }: { onUploaded: () => void; albumId?: string | undefined }) {
+export function PhotoUploader({ onUploaded, albumId, compact = false, fileInputRef }: { onUploaded: () => void; albumId?: string | undefined; compact?: boolean; fileInputRef?: Ref<HTMLInputElement> }) {
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const nextId = useRef(0);
   const onUploadedRef = useRef(onUploaded);
@@ -92,6 +92,7 @@ export function PhotoUploader({ onUploaded, albumId }: { onUploaded: () => void;
   }
 
   const duplicate = queue.find((item) => item.status === 'duplicate');
+  const visibleQueue = compact ? queue.filter(item => item.status !== 'uploaded') : queue;
 
   useEffect(() => {
     if (!queue.some(item => ['queued', 'uploading', 'attaching', 'duplicate', 'link-failed'].includes(item.status))) return;
@@ -101,15 +102,16 @@ export function PhotoUploader({ onUploaded, albumId }: { onUploaded: () => void;
   }, [queue]);
 
   return (
-    <section className="photo-uploader" aria-labelledby="photo-uploader-title">
-      <div>
+    <section className={compact ? 'photo-uploader photo-uploader--compact' : 'photo-uploader'} aria-label={compact ? '照片上传进度' : undefined} aria-labelledby={compact ? undefined : 'photo-uploader-title'} hidden={compact && visibleQueue.length === 0}>
+      {!compact ? <div>
         <p className="eyebrow">把今天，放进我们的故事</p>
         <h2 id="photo-uploader-title">{albumId ? '从本地上传到相册' : '收藏这一次的小美好'}</h2>
         <p>原图进入你的照片库{albumId ? '，同时加入当前相册' : ''}。上传期间请留在当前页面。</p>
-      </div>
-      <label className="upload-picker">
+      </div> : null}
+      <label className="upload-picker" hidden={compact}>
         <span>选择照片</span>
         <input
+          ref={fileInputRef}
           accept="image/*,.jpg,.jpeg,.png,.webp,.heic,.heif"
           multiple
           onChange={(event) => {
@@ -120,15 +122,15 @@ export function PhotoUploader({ onUploaded, albumId }: { onUploaded: () => void;
         />
       </label>
 
-      {queue.length > 0 ? (
+      {visibleQueue.length > 0 ? (
         <ul className="upload-queue">
-          {queue.map((item) => (
+          {visibleQueue.map((item) => (
             <li key={item.id}>
               <span>{item.file.name}</span>
               {item.status === 'queued' ? (
                 <button type="button" aria-label={`取消 ${item.file.name}`} onClick={() => setQueue((current) => current.filter((entry) => entry.id !== item.id))}>取消</button>
               ) : null}
-              {item.status === 'uploading' ? <span>上传中 {item.progress}%</span> : null}
+              {item.status === 'uploading' ? <span>上传中 {item.progress}% <progress aria-label={`${item.file.name} 上传进度`} max={100} value={item.progress} /></span> : null}
               {item.status === 'uploaded' && !item.albumId ? <span>{item.file.name} 已加入处理队列</span> : null}
               {item.status === 'uploaded' && item.albumId ? <span>已加入相册</span> : null}
               {item.status === 'attaching' ? <span>原图已保存，正在加入相册</span> : null}

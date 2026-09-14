@@ -26,10 +26,9 @@ test.describe.serial('photo library ingestion journey', () => {
     await login(page, credentials.firstEmail, credentials.firstPassword);
     await page.goto('/uploads');
     await page.getByLabel('选择照片').setInputFiles(fixture('landscape.jpg'));
-    await expect(page.getByText('landscape.jpg 已加入处理队列')).toBeVisible();
+    await expect(page.locator('.photo-card').filter({ hasText: 'landscape.jpg' })).toBeVisible();
 
     await page.goto('/library');
-    await expect(page.getByText('正在处理')).toBeVisible();
     const image = page.getByRole('img', { name: 'First 上传的照片' });
     await expect(image).toBeVisible({ timeout: 20_000 });
     await page.reload();
@@ -40,6 +39,7 @@ test.describe.serial('photo library ingestion journey', () => {
     await page.goBack();
 
     await page.goto('/uploads');
+    await page.getByText('最近上传', { exact: true }).click();
     await expect(page.getByText('已进入照片库')).toBeVisible();
   });
 
@@ -49,11 +49,12 @@ test.describe.serial('photo library ingestion journey', () => {
     await page.getByLabel('选择照片').setInputFiles(fixture('landscape.jpg'));
     await expect(page.getByRole('dialog', { name: '发现重复照片' })).toBeVisible();
     await page.getByRole('button', { name: '仍然保留' }).click();
-    await expect(page.getByText('landscape.jpg 已加入处理队列')).toBeVisible();
+    await expect(page.locator('.photo-card').filter({ hasText: 'landscape.jpg' })).toHaveCount(2);
 
     await page.getByLabel('选择照片').setInputFiles(fixture('corrupt.jpg'));
     await expect(page.getByText('corrupt.jpg 上传失败')).toBeVisible();
     await page.reload();
+    await page.getByText('最近上传', { exact: true }).click();
     await expect(page.getByText('文件不是支持的图片格式')).toBeVisible();
     await page.goto('/library');
     await expect(page.getByText('landscape.jpg').first()).toBeVisible();

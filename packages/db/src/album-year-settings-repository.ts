@@ -1,5 +1,5 @@
 import { desc, eq, sql } from 'drizzle-orm';
-import type { AlbumThemeId } from '@memory/contracts/albums';
+import { AlbumThemeIdSchema, type AlbumThemeId } from '@memory/contracts/albums';
 import type { Database } from './client.js';
 import { albumYearSettings } from './schema.js';
 
@@ -19,7 +19,8 @@ export type AlbumYearSettingsRepository = {
 
 const selection = {
   year: albumYearSettings.year,
-  themeId: albumYearSettings.themeId,
+  // Normalize retired database enum values without changing existing versions.
+  themeId: sql<string>`${albumYearSettings.themeId}`.mapWith((value) => AlbumThemeIdSchema.catch('secret-garden').parse(value)),
   version: albumYearSettings.version,
 };
 
